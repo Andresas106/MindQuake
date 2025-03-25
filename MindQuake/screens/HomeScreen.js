@@ -1,8 +1,11 @@
-import React from 'react';
-import { View, TouchableOpacity, StyleSheet, Text } from 'react-native';
+import React, {useState} from 'react';
+import { View, TouchableOpacity, StyleSheet, Text, Modal } from 'react-native';
 import { Image } from '@rneui/themed';
+import { AntDesign } from '@expo/vector-icons';
 
 const HomeScreen = ({ navigation }) => {
+  const [modalVisible, setModalVisible] = useState(false);
+
   return (
     <View style={styles.container}>
       <Image
@@ -11,9 +14,26 @@ const HomeScreen = ({ navigation }) => {
       />
       <TouchableOpacity
         style={[styles.button, styles.buttonYellow]}
-        onPress={() => navigation.navigate('Details')}>
+        onPress={() => setModalVisible(true)}>
         <Text style={styles.buttonText}>Register</Text>
       </TouchableOpacity>
+
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Create Account</Text>
+            <Text style={styles.modalSubText}>Sign up to get started</Text>
+            <TouchableOpacity style={styles.backButton} onPress={() => setModalVisible(false)}>
+            <AntDesign name="arrowleft" size={24} color="black" />
+          </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
 
       <TouchableOpacity
         style={[styles.button, styles.buttonBlue]}
@@ -56,7 +76,38 @@ const styles = StyleSheet.create({
     color: 'black',             // Color del texto
     fontSize: 16,
     fontWeight: 'bold',
-  }
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+  },
+  modalView: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 15,
+    alignItems: 'center',
+    elevation: 5,
+  },
+  modalText: {
+    fontSize: 30,
+    marginBottom: 10,
+    marginLeft: 15,
+    fontWeight: "bold"
+  },
+
+  modalSubText: {
+    fontSize: 18,
+    marginTop: 10,
+    color: "gray",
+  },
+
+  backButton: {
+    position: 'absolute',
+    top: 20,
+    left: 10,
+  },
 });
 
 export default HomeScreen;
