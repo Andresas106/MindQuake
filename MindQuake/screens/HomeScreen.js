@@ -2,9 +2,58 @@ import React, {useState} from 'react';
 import { View, TouchableOpacity, StyleSheet, Text, Modal, TextInput } from 'react-native';
 import { Image } from '@rneui/themed';
 import { AntDesign } from '@expo/vector-icons';
+import { supabase } from '../db/supabase'
 
 const HomeScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(true);
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSignUp = async () => {
+    if (!fullName || !email || !password) {
+      alert('All fields are required');
+      return;
+    }
+  
+    const { user, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          full_name: fullName,
+        },
+      },
+    });
+  
+    if (error) {
+      alert(error.message);
+    } else {
+      alert('Registration successful');
+      setIsSignUp(false);
+    }
+  };
+
+  const handleSignIn = async () => {
+    if (!email || !password) {
+      alert('Email and password are required');
+      return;
+    }
+  
+    const { user, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+  
+    if (error) {
+      alert(error.message);
+    } else {
+      alert('Login successful');
+      setModalVisible(false);
+    }
+  };
+  
 
   return (
     <View style={styles.container}>
@@ -14,7 +63,10 @@ const HomeScreen = ({ navigation }) => {
       />
       <TouchableOpacity
         style={[styles.button, styles.buttonYellow]}
-        onPress={() => setModalVisible(true)}>
+        onPress={() => {
+          setModalVisible(true);
+          setIsSignUp(true);
+        }}>
         <Text style={styles.buttonText}>Register</Text>
       </TouchableOpacity>
 
@@ -26,35 +78,37 @@ const HomeScreen = ({ navigation }) => {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>Create Account</Text>
-            <Text style={styles.modalSubText}>Sign up to get started</Text>
+            <Text style={styles.modalText}>{isSignUp ? "Create Account" : "Sign In"}</Text>
+            <Text style={styles.modalSubText}>{isSignUp ? 'Sign up to get started' : 'Welcome back'}</Text>
             <TouchableOpacity style={styles.backButton} onPress={() => setModalVisible(false)}>
             <AntDesign name="arrowleft" size={24} color="black" />
           </TouchableOpacity>
-          <Text style={styles.label}>Full Name</Text>
-          <TextInput
-              style={styles.input}
-              placeholder="Enter your full name"
-              placeholderTextColor="#A9A9A9"
-          />
+
+
+          {isSignUp && <Text style={styles.label}>Full Name</Text>}
+          {isSignUp && <TextInput style={styles.input} placeholder="Enter your full name" placeholderTextColor="#A9A9A9" value={fullName} onChangeText={setFullName} />}
           
           <Text style={styles.label}>Email Address</Text>
           <TextInput
               style={styles.input}
               placeholder="Enter your email"
               placeholderTextColor="#A9A9A9"
+              value={email}
+              onChangeText={setEmail}
           />
           
           <Text style={styles.label}>Password</Text>
           <TextInput
               style={styles.input}
-              placeholder="Create a password"
+              placeholder={!isSignUp ? "Enter your password" : "Create a password"}
               placeholderTextColor="#A9A9A9"
               secureTextEntry
+              value={password}
+              onChangeText={setPassword}
           />
       
-          <TouchableOpacity style={styles.submitButton}>
-              <Text style={styles.submitButtonText}>Submit</Text>
+          <TouchableOpacity style={styles.submitButton} onPress={isSignUp ? handleSignUp : handleSignIn}>
+              <Text style={styles.submitButtonText}>{isSignUp ? 'Submit' : 'Log In'}</Text>
           </TouchableOpacity>
 
           <Text style={styles.orText}>or</Text>
@@ -63,14 +117,27 @@ const HomeScreen = ({ navigation }) => {
               <Text style={styles.googleButtonText}>Continue with Google</Text>
           </TouchableOpacity>
 
-          <Text style={styles.footerText}>Already have an account? <Text style={styles.signInText}>Sign in</Text></Text>
+          <Text style={styles.footerText}>
+              {isSignUp ? 'Already have an account? ' : "Don't have an account? "}
+              <Text style={styles.signInText} onPress={() => {
+                setIsSignUp(!isSignUp);
+                setFullName('');
+                setEmail('');
+                setPassword('');
+              } }>
+                {isSignUp ? 'Sign in' : 'Register'}
+              </Text>
+            </Text>
           </View>
         </View>
       </Modal>
 
       <TouchableOpacity
         style={[styles.button, styles.buttonBlue]}
-        onPress={() => navigation.navigate('AnotherScreen')}>
+        onPress={() => {
+          setModalVisible(true);
+          setIsSignUp(false);
+        }}>
         <Text style={styles.buttonText}>Sign in</Text>
       </TouchableOpacity>
     </View>
