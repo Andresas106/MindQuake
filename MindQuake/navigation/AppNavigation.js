@@ -3,7 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 
 // Importa tus pantallas
 import HomeScreen from '../screens/HomeScreen';
-import VerificationScreen from '../db/verification'
+import MainScreen from '../screens/MainScreen';
 
 const Stack = createStackNavigator();
 
@@ -12,7 +12,7 @@ const AppNavigator = () => {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Verification" component={VerificationScreen} />
+        <Stack.Screen name="Main" component={MainScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

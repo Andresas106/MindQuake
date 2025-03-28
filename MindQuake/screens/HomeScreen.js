@@ -30,7 +30,7 @@ const HomeScreen = ({ navigation }) => {
     if (error) {
       alert(error.message);
     } else {
-      alert('Registration successful');
+      alert('Registration successful. Verify the registration by checking your email.');
       setIsSignUp(false);
     }
   };
@@ -49,8 +49,7 @@ const HomeScreen = ({ navigation }) => {
     if (error) {
       alert(error.message);
     } else {
-      alert('Login successful');
-      setModalVisible(false);
+      navigation.navigate('MainScreen');
     }
   };
   
