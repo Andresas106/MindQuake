@@ -1,8 +1,9 @@
-import React, {useState, useEffect } from 'react';
+import React, {useState, useEffect, useCallback } from 'react';
 import { View, TouchableOpacity, StyleSheet, Text, Modal, TextInput } from 'react-native';
 import { Image } from '@rneui/themed';
 import { AntDesign } from '@expo/vector-icons';
 import { supabase } from '../db/supabase'
+import { useFocusEffect } from '@react-navigation/native';
 
 const HomeScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -52,6 +53,17 @@ const HomeScreen = ({ navigation }) => {
       navigation.navigate('Main');
     }
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      // Reiniciar el estado cuando la pantalla se enfoca
+      setModalVisible(false);
+      setIsSignUp(true);
+      setFullName('');
+      setEmail('');
+      setPassword('');
+    }, [])
+  );
   
 
   return (
@@ -73,7 +85,12 @@ const HomeScreen = ({ navigation }) => {
         animationType="fade"
         transparent={true}
         visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
+        onRequestClose={() =>{
+          setModalVisible(false);
+          setFullName('');
+          setEmail('');
+          setPassword('');
+        } }
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalView}>
@@ -120,9 +137,6 @@ const HomeScreen = ({ navigation }) => {
               {isSignUp ? 'Already have an account? ' : "Don't have an account? "}
               <Text style={styles.signInText} onPress={() => {
                 setIsSignUp(!isSignUp);
-                setFullName('');
-                setEmail('');
-                setPassword('');
               } }>
                 {isSignUp ? 'Sign in' : 'Register'}
               </Text>
