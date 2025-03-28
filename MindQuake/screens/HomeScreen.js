@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect } from 'react';
 import { View, TouchableOpacity, StyleSheet, Text, Modal, TextInput } from 'react-native';
 import { Image } from '@rneui/themed';
 import { AntDesign } from '@expo/vector-icons';
@@ -30,7 +30,7 @@ const HomeScreen = ({ navigation }) => {
     if (error) {
       alert(error.message);
     } else {
-      alert('Registration successful. Verify the registration by checking your email.');
+      alert('Registration successful.');
       setIsSignUp(false);
     }
   };
@@ -49,7 +49,7 @@ const HomeScreen = ({ navigation }) => {
     if (error) {
       alert(error.message);
     } else {
-      navigation.navigate('MainScreen');
+      navigation.navigate('Main');
     }
   };
   
