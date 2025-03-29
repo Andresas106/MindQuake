@@ -33,6 +33,9 @@ const HomeScreen = ({ navigation }) => {
     } else {
       alert('Registration successful.');
       setIsSignUp(false);
+      setFullName('');
+      setEmail('');
+      setPassword('');
     }
   };
 
@@ -51,6 +54,7 @@ const HomeScreen = ({ navigation }) => {
       alert(error.message);
     } else {
       navigation.navigate('Main');
+      setModalVisible(false);
     }
   };
 
@@ -79,6 +83,14 @@ const HomeScreen = ({ navigation }) => {
           setIsSignUp(true);
         }}>
         <Text style={styles.buttonText}>Register</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[styles.button, styles.buttonBlue]}
+        onPress={() => {
+          setModalVisible(true);
+          setIsSignUp(false);
+        }}>
+        <Text style={styles.buttonText}>Sign in</Text>
       </TouchableOpacity>
 
       <Modal
@@ -137,6 +149,9 @@ const HomeScreen = ({ navigation }) => {
               {isSignUp ? 'Already have an account? ' : "Don't have an account? "}
               <Text style={styles.signInText} onPress={() => {
                 setIsSignUp(!isSignUp);
+                setFullName('');
+                setEmail('');
+                setPassword('');
               } }>
                 {isSignUp ? 'Sign in' : 'Register'}
               </Text>
@@ -145,14 +160,7 @@ const HomeScreen = ({ navigation }) => {
         </View>
       </Modal>
 
-      <TouchableOpacity
-        style={[styles.button, styles.buttonBlue]}
-        onPress={() => {
-          setModalVisible(true);
-          setIsSignUp(false);
-        }}>
-        <Text style={styles.buttonText}>Sign in</Text>
-      </TouchableOpacity>
+
     </View>
   );
 };
