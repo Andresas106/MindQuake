@@ -4,6 +4,7 @@ import { Image } from '@rneui/themed';
 import { AntDesign } from '@expo/vector-icons';
 import { supabase } from '../db/supabase'
 import { useFocusEffect } from '@react-navigation/native';
+import User from '../model/User';
 
 const HomeScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -18,7 +19,7 @@ const HomeScreen = ({ navigation }) => {
       return;
     }
   
-    const { user, error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -31,11 +32,29 @@ const HomeScreen = ({ navigation }) => {
     if (error) {
       alert(error.message);
     } else {
-      alert('Registration successful.');
-      setIsSignUp(false);
-      setFullName('');
-      setEmail('');
-      setPassword('');
+
+      const userId = data.user.id;
+      const newUser = new User({
+        id: userId,
+        full_name: fullName,
+        email: email,
+      });
+
+      const { error: userError } = await supabase.from('user').insert([newUser.toJSON()]);
+
+      if (userError) {
+        console.error('Error saving user:', userError);
+        alert(`Error saving user: ${userError.message}`);
+      }
+      else
+      {
+        alert('Registration successful.');
+        setIsSignUp(false);
+        setFullName('');
+        setEmail('');
+        setPassword('');
+      }
+      
     }
   };
 
@@ -139,12 +158,6 @@ const HomeScreen = ({ navigation }) => {
               <Text style={styles.submitButtonText}>{isSignUp ? 'Submit' : 'Log In'}</Text>
           </TouchableOpacity>
 
-          <Text style={styles.orText}>or</Text>
-
-          <TouchableOpacity style={styles.googleButton}>
-              <Text style={styles.googleButtonText}>Continue with Google</Text>
-          </TouchableOpacity>
-
           <Text style={styles.footerText}>
               {isSignUp ? 'Already have an account? ' : "Don't have an account? "}
               <Text style={styles.signInText} onPress={() => {
@@ -159,8 +172,6 @@ const HomeScreen = ({ navigation }) => {
           </View>
         </View>
       </Modal>
-
-
     </View>
   );
 };
