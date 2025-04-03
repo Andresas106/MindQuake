@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback } from 'react';
+import React, {useState, useCallback } from 'react';
 import { View, TouchableOpacity, StyleSheet, Text, Modal, TextInput } from 'react-native';
 import { Image } from '@rneui/themed';
 import { AntDesign } from '@expo/vector-icons';
@@ -43,7 +43,6 @@ const HomeScreen = ({ navigation }) => {
       const { error: userError } = await supabase.from('user').insert([newUser.toJSON()]);
 
       if (userError) {
-        console.error('Error saving user:', userError);
         alert(`Error saving user: ${userError.message}`);
       }
       else
@@ -79,7 +78,6 @@ const HomeScreen = ({ navigation }) => {
 
   useFocusEffect(
     useCallback(() => {
-      // Reiniciar el estado cuando la pantalla se enfoca
       setModalVisible(false);
       setIsSignUp(true);
       setFullName('');
@@ -269,25 +267,6 @@ const styles = StyleSheet.create({
       color: '#FFFFFF',
       fontSize: 16,
   },
-  orText: {
-      textAlign: 'center',
-      marginVertical: 10,
-      fontSize: 14,
-      color: '#A9A9A9',
-  },
-  googleButton: {
-      alignItems: 'center',
-      padding: 15,
-      borderWidth: 1,
-      borderColor: '#B0C4DE',
-      borderRadius: 5,
-      marginBottom: 20,
-      width: '100%',
-  },
-  googleButtonText: {
-      fontSize: 16,
-      color: '#000000',
-  },
   footerText: {
       textAlign: 'center',
       marginTop: 20,
@@ -296,6 +275,7 @@ const styles = StyleSheet.create({
       fontWeight: 'bold',
       color: '#007BFF',
   },
+  
 });
 
 export default HomeScreen;
