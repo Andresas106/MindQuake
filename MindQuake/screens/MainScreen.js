@@ -12,12 +12,11 @@ const MainScreen = ({ navigation }) => {
    const [isEnabled2, setIsEnabled2] = useState(false);
    const [isEnabled3, setIsEnabled3] = useState(false);
    const [level, setLevel] = useState(null);
-   const [image, setImage] = useState(null);
+   const [imageSource, setImage] = useState(null);
 
    const userID = useUserId();
 
    useEffect(() => {
-    console.log("userID:", userID);
 
   const fetchUserData = async () => {
     const { data, error } = await supabase
@@ -30,10 +29,10 @@ const MainScreen = ({ navigation }) => {
       console.error("Error al obtener los datos del usuario:", error);
     } else if (data) {
       setLevel(data.level);   // Guarda el nivel en el estado
-      setImage(data.profile_picture);   // Guarda la imagen en el estado
 
-      console.log(data.level);
-      console.log(data.profile_picture);
+      const image = Image.resolveAssetSource(require('${data.profile_picture}'));
+
+      setImage(image);   // Guarda la imagen en el estado
     }
   };
 
@@ -45,7 +44,10 @@ const MainScreen = ({ navigation }) => {
     <View style={styles.container}>
       <Image source={require('../assets/logo.png')} style={styles.logoimage}/>
       <View style={styles.imageContainer}>
-        <Image source={require(image)} style={styles.image} />
+        {image && (
+          <Image source={imageSource} style={styles.image} />
+        )}
+        
       </View>
       <TouchableOpacity
         style={[styles.button, styles.buttonYellow]}
