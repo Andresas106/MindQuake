@@ -2,6 +2,8 @@ import React, {useState} from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, Modal, Switch } from 'react-native';
 import { Image } from '@rneui/themed';
 import { AntDesign } from '@expo/vector-icons';
+import useUserId from '../hooks/useUserId';
+import { supabase } from '../db/supabase'
 
 
 const MainScreen = ({ navigation }) => {
@@ -9,6 +11,8 @@ const MainScreen = ({ navigation }) => {
    const [isEnabled1, setIsEnabled1] = useState(false);
    const [isEnabled2, setIsEnabled2] = useState(false);
    const [isEnabled3, setIsEnabled3] = useState(false);
+
+   const userID = useUserId();
   
 
   return (
