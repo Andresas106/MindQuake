@@ -38,6 +38,7 @@ const HomeScreen = ({ navigation }) => {
         id: userId,
         full_name: fullName,
         email: email,
+        profile_picture: '../assets/avatars/user.png'
       });
 
       const { error: userError } = await supabase.from('user').insert([newUser.toJSON()]);

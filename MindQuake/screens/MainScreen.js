@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, Modal, Switch } from 'react-native';
 import { Image } from '@rneui/themed';
 import { AntDesign } from '@expo/vector-icons';
@@ -11,15 +11,41 @@ const MainScreen = ({ navigation }) => {
    const [isEnabled1, setIsEnabled1] = useState(false);
    const [isEnabled2, setIsEnabled2] = useState(false);
    const [isEnabled3, setIsEnabled3] = useState(false);
+   const [level, setLevel] = useState(null);
+   const [image, setImage] = useState(null);
 
    const userID = useUserId();
+
+   useEffect(() => {
+    console.log("userID:", userID);
+
+  const fetchUserData = async () => {
+    const { data, error } = await supabase
+      .from('user')  // Asegúrate de que el nombre de la tabla es correcto
+      .select('level, profile_picture') // Seleccionamos ambas columnas
+      .eq('id', userID)
+      .maybeSingle(); // Evita errores si no hay datos
+
+    if (error) {
+      console.error("Error al obtener los datos del usuario:", error);
+    } else if (data) {
+      setLevel(data.level);   // Guarda el nivel en el estado
+      setImage(data.profile_picture);   // Guarda la imagen en el estado
+
+      console.log(data.level);
+      console.log(data.profile_picture);
+    }
+  };
+
+  fetchUserData();
+  }, []);
   
 
   return (
     <View style={styles.container}>
       <Image source={require('../assets/logo.png')} style={styles.logoimage}/>
       <View style={styles.imageContainer}>
-        <Image source={require('../assets/user.png')} style={styles.image} />
+        <Image source={require(image)} style={styles.image} />
       </View>
       <TouchableOpacity
         style={[styles.button, styles.buttonYellow]}
@@ -111,8 +137,8 @@ const styles = StyleSheet.create({
       marginBottom: 50,
     },
     image: {
-      width: 80, // Reduce el tamaño de la imagen
-      height: 80,
+      width: 90, // Reduce el tamaño de la imagen
+      height: 90,
       resizeMode: 'cover',
     },
   
