@@ -17,8 +17,6 @@ const MainScreen = ({ navigation }) => {
   const userID = useUserId();
 
   useEffect(() => {
-    console.log("USER ID:", userID);
-
     const fetchUserData = async () => {
       const { data, error } = await supabase
         .from('user')  // Asegúrate de que el nombre de la tabla es correcto
