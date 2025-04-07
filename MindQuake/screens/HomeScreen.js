@@ -22,11 +22,6 @@ const HomeScreen = ({ navigation }) => {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: {
-        data: {
-          full_name: fullName,
-        },
-      },
     });
   
     if (error) {
@@ -38,7 +33,7 @@ const HomeScreen = ({ navigation }) => {
         id: userId,
         full_name: fullName,
         email: email,
-        profile_picture: '../assets/avatars/user.png'
+        profile_picture: 'https://qrlyeyxtbivvoaugzxvk.supabase.co/storage/v1/object/public/avatars//user.png'
       });
 
       const { error: userError } = await supabase.from('user').insert([newUser.toJSON()]);

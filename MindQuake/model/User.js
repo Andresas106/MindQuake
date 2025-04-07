@@ -17,25 +17,27 @@ class User {
       this.created_at = created_at;
     }
   
-   /* // Método para actualizar la foto de perfil
-    updateProfilePicture(newUrl) {
-      this.profile_picture = newUrl;
-    }
-  
-    // Método para aumentar la XP y nivel
-    addXp(amount) {
-      this.xp += amount;
-      this.checkLevelUp();
-    }
-  
-    // Método para verificar si sube de nivel
-    checkLevelUp() {
-      const requiredXp = this.level * 100; // Ejemplo: cada nivel requiere 100 * nivel XP
-      while (this.xp >= requiredXp) {
-        this.xp -= requiredXp;
-        this.level++;
+    calculateLevel() {
+      let level = 1;
+      let xpRequiredForNextLevel = 250;
+
+      while(this.xp >= xpRequiredForNextLevel) {
+        level++;
+        this.xp -= xpRequiredForNextLevel;
+        xpRequiredForNextLevel += 250;
       }
-    }*/
+
+      return level;
+    }
+
+    calculateXpRequiredForNextLevel() {
+      return 250 * this.level;
+    }
+
+    updateXp(newXp) {
+      this.xp = newXp;
+      this.level = this.calculateLevel();
+    }
   
     // Método para obtener los datos del usuario en formato JSON
     toJSON() {
