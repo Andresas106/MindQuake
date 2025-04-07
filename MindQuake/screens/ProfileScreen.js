@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, TouchableOpacity, Image, Text, Animated } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Image, Text } from 'react-native';
 import useUserId from '../hooks/useUserId';
 import { AntDesign } from '@expo/vector-icons';
 import { supabase } from '../db/supabase'
 import User from '../model/User';
+import * as Progress from 'react-native-progress';
 
 
 const ProfileScreen = ({ navigation }) => {
     const [user, setUser] = useState(null); // Usamos un solo estado para el objeto User
-    const [progress] = useState(new Animated.Value(0));
     const userID = useUserId();
 
     useEffect(() => {
@@ -40,22 +40,6 @@ const ProfileScreen = ({ navigation }) => {
         }
     }, [userID]);
 
-    // Calcular el progreso de la XP para la animación
-    useEffect(() => {
-        if (user) {
-            const currentXp = user.xp;
-            const xpForNextLevel = user.calculateXpRequiredForNextLevel();
-
-            // Normalizamos la XP y la pasamos a un valor entre 0 y 1 para la animación
-            const progressPercentage = currentXp / xpForNextLevel;
-            Animated.timing(progress, {
-                toValue: progressPercentage, // Progreso final
-                duration: 1000, // Duración de la animación
-                useNativeDriver: false // Usamos false ya que estamos manipulando el ancho de la vista
-            }).start();
-        }
-    }, [user]); // Se ejecuta cuando el objeto user cambia
-
     return (
         <View style={styles.container}>
             <TouchableOpacity style={styles.backButton} onPress={() => console.log("buenos dias")}>
@@ -78,26 +62,34 @@ const ProfileScreen = ({ navigation }) => {
                         <AntDesign name="edit" size={15} color="white" />
                     </View>
                 </View>
-                
+
             )}
-            {/* Barra de progreso de la XP */}
+            {/* Barra de progreso de XP */}
             {user && (
-                        <View style={styles.progressContainer}>
-                            <Text style={styles.progressText}>
-                                {user.xp} / {user.calculateXpRequiredForNextLevel()} XP
-                            </Text>
-                            <View style={styles.progressBarBackground}>
-                                <Animated.View
-                                    style={[styles.progressBar, {
-                                        width: progress.interpolate({
-                                            inputRange: [0, 250],
-                                            outputRange: ['0%', '100%'],
-                                        })
-                                    }]}
-                                />
-                            </View>
-                        </View>
-                    )}
+                <View style={styles.progressContainer}>
+                    <Text style={styles.progressText}>
+                        {user.getCurrentXpInLevel()} / {user.calculateXpRequiredForNextLevel()} XP
+                    </Text>
+                    <View style={styles.progressWrapper}>
+                        <Text style={styles.text}>{user.level}</Text>
+                        <Progress.Bar
+                            progress={user.getCurrentXpInLevel() / user.calculateXpRequiredForNextLevel()}
+                            width={200}
+                            height={5}
+                            borderRadius={5}
+                            color={'#76c7c0'}
+                        />
+                        <Text style={styles.text}>{user.level + 1}</Text>
+                    </View>
+                </View>
+            )}
+            {/* Nombre usuario */}
+            {user && (
+                <View style={styles.textContainer}>
+                    <Text style={styles.nameText}>{user.full_name}</Text>
+                    <Text style={styles.achievementsText}>Achievements</Text>
+                </View>
+            )}
         </View>
     );
 };
@@ -160,24 +152,41 @@ const styles = StyleSheet.create({
     },
     progressContainer: {
         alignItems: 'center',
-        marginTop: 20,
+        marginTop: 10,
     },
+    progressWrapper: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between', // Asegura que los textos se separen sin hacer que se estire demasiado
+        width: 250, // Ancho fijo para la barra y los textos
+        marginVertical: 10, // Espacio vertical entre la barra y los textos
+      },
     progressText: {
         fontSize: 14,
         color: '#333',
-        marginBottom: 10,
+        marginBottom: 8,
+        fontWeight: 'bold',
     },
-    progressBarBackground: {
-        width: '80%',
-        height: 10,
-        backgroundColor: 'gray',
-        borderRadius: 5,
-        overflow: 'hidden',
+    text: {
+        fontSize: 14,
+        fontWeight: 'bold',
+        color: '#333',
     },
-    progressBar: {
-        height: '100%',
-        backgroundColor: '#76c7c0',
+    textContainer: {
+        alignItems: 'center',
+        marginBottom: 20,
     },
+    nameText: {
+        fontSize: 35,
+        fontWeight: 'bold',
+        color: 'black'
+    },
+    achievementsText: {
+        fontSize: 25,
+        fontWeight: 'bold',
+        color: 'black',
+        marginTop: 20
+    }
 });
 
 export default ProfileScreen;

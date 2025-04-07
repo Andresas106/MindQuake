@@ -18,22 +18,38 @@ class User {
     }
   
     calculateLevel() {
+      let xp = this.xp;
       let level = 1;
-      let xpRequiredForNextLevel = 250;
-
-      while(this.xp >= xpRequiredForNextLevel) {
+      let xpRequired = 250;
+  
+      while (xp >= xpRequired) {
+        xp -= xpRequired;
         level++;
-        this.xp -= xpRequiredForNextLevel;
-        xpRequiredForNextLevel += 250;
+        xpRequired += 250;
       }
-
+  
       return level;
     }
-
+  
     calculateXpRequiredForNextLevel() {
-      return 250 * this.level;
+      const level = this.calculateLevel();
+      return 250 + (level - 1) * 250;
     }
-
+  
+    getCurrentXpInLevel() {
+      let xp = this.xp;
+      let xpRequired = 250;
+      let level = 1;
+  
+      while (xp >= xpRequired) {
+        xp -= xpRequired;
+        level++;
+        xpRequired += 250;
+      }
+  
+      return xp; // XP dentro del nivel actual
+    }
+  
     updateXp(newXp) {
       this.xp = newXp;
       this.level = this.calculateLevel();
