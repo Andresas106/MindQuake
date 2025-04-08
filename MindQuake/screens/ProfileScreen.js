@@ -10,6 +10,7 @@ import * as Progress from 'react-native-progress';
 const ProfileScreen = ({ navigation }) => {
     const [user, setUser] = useState(null); // Usamos un solo estado para el objeto User
     const userID = useUserId();
+    const [achievements, setAchievements] = useState([]);
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -35,8 +36,26 @@ const ProfileScreen = ({ navigation }) => {
             }
         };
 
+        const fetchAchievementsUserData = async () => {
+            const { data, error } = await supabase
+                .from('user_achievements')
+                .select(`achievement_id, unlocked_at, achievements (icon)`)
+                .eq('user_id', userID);
+            if (error) {
+                console.error("Error al obtener los datos del usuario:", error);
+            } else if (data) {
+                const formattedAchievements = data.map(item => new Achievement({
+                    id: item.achievement_id,
+                    icon: item.achievements.icon,
+                    unlockedAt: item.unlocked_at,
+                }));
+                setAchievements(formattedAchievements);
+            }
+        }
+
         if (userID) {
             fetchUserData();
+            fetchAchievementsUserData();
         }
     }, [userID]);
 
@@ -88,7 +107,46 @@ const ProfileScreen = ({ navigation }) => {
                 <View style={styles.textContainer}>
                     <Text style={styles.nameText}>{user.full_name}</Text>
                     <Text style={styles.achievementsText}>Achievements</Text>
+                    <TouchableOpacity
+                        style={styles.achievementsContainer}
+                        onPress={() => navigation.navigate('AchievementsOverview', { achievements })}
+                    >
+                        {achievements.length > 0 ? (
+                            <View style={styles.achievementsGrid}>
+                                {achievements.slice(0, 3).map((achievement, index) => (
+                                    <Image
+                                        key={index}
+                                        source={{ uri: achievement.icon }}
+                                        style={styles.achievementImage}
+                                    />
+                                ))}
+                            </View>
+                        ) : (
+                            <View style={styles.noAchievementsContainer}>
+                                <Image
+                                    source={{ uri: 'URL_ILUSTRACION_SIN_LOGROS' }}
+                                    style={styles.noAchievementsImage}
+                                />
+                            </View>
+                        )}
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                            style={[styles.button, styles.buttonYellow]}
+                            onPress={() => {
+                            }}>
+                            <Text style={styles.buttonText}>Leaderboard</Text>
+                          </TouchableOpacity>
+                    
+                          <TouchableOpacity
+                            style={[styles.button, styles.buttonBlue]}
+                            onPress={() => {
+                             
+                            }}>
+                            <Text style={styles.buttonText}>Sign Out</Text>
+                          </TouchableOpacity>
+
                 </View>
+
             )}
         </View>
     );
@@ -160,7 +218,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between', // Asegura que los textos se separen sin hacer que se estire demasiado
         width: 250, // Ancho fijo para la barra y los textos
         marginVertical: 10, // Espacio vertical entre la barra y los textos
-      },
+    },
     progressText: {
         fontSize: 14,
         color: '#333',
@@ -186,7 +244,62 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: 'black',
         marginTop: 20
-    }
+    },
+    achievementsContainer: {
+        alignItems: 'center',
+        width: '100%',
+    },
+    achievementsGrid: {
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        width: '100%',
+        marginTop: 10,
+    },
+    achievementImage: {
+        width: 70,
+        height: 70,
+        borderRadius: 10,
+        borderWidth: 2,
+        borderColor: '#76c7c0',
+    },
+    noAchievementsContainer: {
+        alignItems: 'center',
+        marginTop: 20,
+        width: 200,
+        height: 100,
+        backgroundColor: '#d3dbe8'
+    },
+    noAchievementsImage: {
+        width: 150,
+        height: 150,
+        marginBottom: 10,
+    },
+    noAchievementsText: {
+        fontSize: 16,
+        color: '#777',
+        textAlign: 'center',
+    },
+    buttonYellow: {
+        borderColor: 'gold',
+        borderWidth: 8,
+      },
+      buttonBlue: {
+        borderColor: 'dodgerblue',
+        borderWidth: 8,
+      },
+      buttonText: {
+        color: 'black',
+        fontSize: 16,
+        fontWeight: 'bold',
+      },
+      button: {
+        width: '50%',
+        padding: 15,
+        borderRadius: 50,
+        marginBottom: 40,
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
 });
 
 export default ProfileScreen;
