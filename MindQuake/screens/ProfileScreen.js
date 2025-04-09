@@ -61,13 +61,13 @@ const ProfileScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity style={styles.backButton} onPress={() => console.log("buenos dias")}>
+            <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Main')}>
                 <AntDesign name="arrowleft" size={35} color="black" />
             </TouchableOpacity>
 
             {user && (
                 <View style={styles.imageContainer}>
-                    <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+                    <TouchableOpacity onPress={() => navigation.navigate('EditProfile')}>
                         {/* Si profile_picture es null o undefined, usamos una imagen por defecto */}
                         <Image
                             source={{ uri: user.profile_picture }} // URL de una imagen por defecto
@@ -109,7 +109,7 @@ const ProfileScreen = ({ navigation }) => {
                     <Text style={styles.achievementsText}>Achievements</Text>
                     <TouchableOpacity
                         style={styles.achievementsContainer}
-                        onPress={() => navigation.navigate('AchievementsOverview', { achievements })}
+                        onPress={() => /*navigation.navigate('AchievementsOverview', { achievements })*/ console.log('fuck this')}
                     >
                         {achievements.length > 0 ? (
                             <View style={styles.achievementsGrid}>
@@ -138,9 +138,10 @@ const ProfileScreen = ({ navigation }) => {
                           </TouchableOpacity>
                     
                           <TouchableOpacity
-                            style={[styles.button, styles.buttonBlue]}
-                            onPress={() => {
-                             
+                            style={[styles.button, styles.buttonRed]}
+                            onPress={async () => {
+                                const {error} = await supabase.auth.signOut();
+                                if(!error) navigation.navigate('Home');
                             }}>
                             <Text style={styles.buttonText}>Sign Out</Text>
                           </TouchableOpacity>
@@ -283,8 +284,8 @@ const styles = StyleSheet.create({
         borderColor: 'gold',
         borderWidth: 8,
       },
-      buttonBlue: {
-        borderColor: 'dodgerblue',
+      buttonRed: {
+        borderColor: 'red',
         borderWidth: 8,
       },
       buttonText: {
