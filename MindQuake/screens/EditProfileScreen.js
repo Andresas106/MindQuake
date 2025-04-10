@@ -1,12 +1,93 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
+import useUserId from '../hooks/useUserId';
+import User from '../model/User';
+import { supabase } from '../db/supabase';
 
 const EditProfileScreen = ({navigation}) => {
     const [profilePicture, setProfilePicture] = useState(''); // Imagen actual del perfil
-    const [nickname, setNickname] = useState("");
+    const [fullName, setFullName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const userID = useUserId();
+
+    const setAuthChanges = async () => {
+        const updates = {};
+        if (email) updates.email = email;
+        if (password) updates.password = password;
+    
+        if (Object.keys(updates).length === 0) return;
+    
+        const { data, error } = await supabase.auth.updateUser(updates);
+    
+        if (error) {
+            console.error('Error updating auth:', error);
+            throw error;
+        }
+    
+        return data;
+    }
+
+    const setBDChanges = async () => {
+        const updates = {
+            full_name: fullName,
+            profile_picture: profilePicture,
+            email: email // <- también actualizamos el email aquí
+        };
+    
+        const { error } = await supabase
+            .from('user')
+            .update(updates)
+            .eq('id', userID);
+    
+        if (error) {
+            console.error('Error al actualizar base de datos:', error);
+            throw error;
+        }
+    }
+
+    const handleSave = async () =>{
+        try {
+            await setAuthChanges();
+            await setBDChanges();
+            alert('User Profile updated correctly');
+            navigation.goBack();
+        }catch(error) {
+            alert('Error updating the user data');
+        }
+    }
+
+        useEffect(() => {
+            const fetchUserDataBD = async () => {
+                const { data, error } = await supabase
+                    .from('user')  // Asegúrate de que el nombre de la tabla es correcto
+                    .select()
+                    .eq('id', userID)
+                    .single(); // Evita errores si no hay datos
+    
+                if (error) {
+                    console.error("Error al obtener los datos del usuario:", error);
+                } else if (data) {
+                    const userInstance = new User({
+                        id: data.id,
+                        full_name: data.full_name,
+                        email: data.email,
+                        profile_picture: data.profile_picture,
+                        xp: data.xp,
+                        level: data.level,
+                        created_at: data.created_at
+                    });
+                    setProfilePicture(userInstance.profile_picture);
+                    setFullName(userInstance.full_name);
+                    setEmail(userInstance.email);
+                }
+            };
+    
+            if (userID) {
+                fetchUserDataBD();
+            }
+        }, [userID]);
 
     return (
         <View style={styles.container}>
@@ -26,8 +107,8 @@ const EditProfileScreen = ({navigation}) => {
             <Text style={styles.label}>Change Full Name</Text>
             <TextInput
                 style={styles.input}
-                value={nickname}
-                onChangeText={setNickname}
+                value={fullName}
+                onChangeText={setFullName}
                 placeholder="Enter your new full name"
             />
         </View>
@@ -57,7 +138,7 @@ const EditProfileScreen = ({navigation}) => {
         </View>
 
         {/* Botón para guardar los cambios */}
-        <TouchableOpacity style={styles.saveButton}>
+        <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
             <Text style={styles.saveButtonText}>Save Changes</Text>
         </TouchableOpacity>
     </View>
