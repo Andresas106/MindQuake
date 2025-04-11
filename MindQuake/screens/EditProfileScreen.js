@@ -58,12 +58,12 @@ const EditProfileScreen = ({ navigation }) => {
             });
         
             if (error) {
-                console.error('❌ Error al listar archivos en avatars:', error.message);
+                console.error('Error al listar archivos en avatars:', error.message);
                 return;
             }
         
             if (!data || data.length === 0) {
-                console.warn('⚠️ No se encontraron archivos en el bucket avatars.');
+                console.warn('No se encontraron archivos en el bucket avatars.');
                 return;
             }
         
