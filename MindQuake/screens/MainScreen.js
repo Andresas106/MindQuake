@@ -53,6 +53,7 @@ const MainScreen = ({ navigation }) => {
       <TouchableOpacity
         style={[styles.button, styles.buttonYellow]}
         onPress={() => {
+          navigation.navigate('GameSettings');
         }}>
         <Text style={styles.buttonText}>Play</Text>
       </TouchableOpacity>
