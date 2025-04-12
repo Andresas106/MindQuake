@@ -38,7 +38,6 @@ const MainScreen = ({ navigation }) => {
     
   }, [userID]);
 
-
   return (
     <View style={styles.container}>
       <Image source={require('../assets/logo.png')} style={styles.logoimage} />

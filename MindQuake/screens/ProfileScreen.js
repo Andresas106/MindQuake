@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, TouchableOpacity, Image, Text } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Image, Text, ActivityIndicator } from 'react-native';
 import useUserId from '../hooks/useUserId';
 import { AntDesign } from '@expo/vector-icons';
 import { supabase } from '../db/supabase'
@@ -58,6 +58,14 @@ const ProfileScreen = ({ navigation }) => {
             fetchAchievementsUserData();
         }
     }, [userID]);
+
+    if (!user) {
+        return (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" />
+          </View>
+        );
+      }
 
     return (
         <View style={styles.container}>
@@ -300,6 +308,11 @@ const styles = StyleSheet.create({
         marginBottom: 40,
         alignItems: 'center',
         justifyContent: 'center',
+      },
+      loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
       },
 });
 

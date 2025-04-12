@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {View, StyleSheet, Text, Button, ActivityIndicator, ScrollView } from 'react-native';
+import {View, StyleSheet, Text, Button, ActivityIndicator } from 'react-native';
 import Slider from '@react-native-community/slider';
 import useUserId from '../hooks/useUserId';
 import User from '../model/User';
@@ -8,11 +8,52 @@ import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 import {MaterialIcons} from '@expo/vector-icons'
 
 const categoriesList = [
-  { label: 'General', value: 'general' },
-  { label: 'Ciencia', value: 'science' },
-  { label: 'Historia', value: 'history' },
-  { label: 'Deportes', value: 'sports' },
-  { label: 'Entretenimiento', value: 'entertainment' },
+  {
+    label: 'Science',
+    value: 'group_science',
+    children: [
+      { label: 'Nature', value: 17 },
+      { label: 'Computers', value: 18 },
+      { label: 'Mathematics', value: 19 },
+      { label: 'Gadgets', value: 30 },
+    ],
+  },
+  {
+    label: 'Entertainment',
+    value: 'group_entertainment',
+    children: [
+      { label: 'Books', value: 10 },
+      { label: 'Film', value: 11 },
+      { label: 'Music', value: 12 },
+      { label: 'Musicals & Theatres', value: 13 },
+      { label: 'Television', value: 14 },
+      { label: 'Video Games', value: 15 },
+      { label: 'Board Games', value: 16 },
+      { label: 'Comics', value: 29 },
+      { label: 'Japanese Anime & Manga', value: 31 },
+      { label: 'Cartoon & Animations', value: 32 },
+    ],
+  },
+  {
+    label: 'Geography',
+    value: 'group_geography',
+    children: [{ label: 'Geography', value: 22 }],
+  },
+  {
+    label: 'History',
+    value: 'group_history',
+    children: [{ label: 'History', value: 23 }],
+  },
+  {
+    label: 'Sports',
+    value: 'group_sports',
+    children: [{ label: 'Sports', value: 21 }],
+  },
+  {
+    label: 'Art',
+    value: 'group_art',
+    children: [{ label: 'Art', value: 25 }],
+  },
 ];
 
 const GameSettingsScreen = ({ navigation }) => {
@@ -74,13 +115,14 @@ const GameSettingsScreen = ({ navigation }) => {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <View contentContainerStyle={styles.container}>
       <Text style={styles.greeting}>Hola, {user.full_name} 👋</Text>
 
       <Text style={styles.label}>Categorías</Text>
       <SectionedMultiSelect
         items={categoriesList}
         uniqueKey='value'
+        subKey='children'
         displayKey='label'
         selectedItems={selectedCategories}
         onSelectedItemsChange={setSelectedCategories}
@@ -108,7 +150,7 @@ const GameSettingsScreen = ({ navigation }) => {
         maximumValue={20}
         step={5}
         value={questionCount}
-        onValueChange={setQuestionCount}
+        onSlidingComplete={setQuestionCount}
         minimumTrackTintColor="#6200ee"
         maximumTrackTintColor="#000000"
       />
@@ -116,7 +158,7 @@ const GameSettingsScreen = ({ navigation }) => {
       <View style={styles.buttonContainer}>
         <Button title="Comenzar Trivia" onPress={startGame} color="#6200ee" />
       </View>
-    </ScrollView>
+    </View>
   );
 };
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, Modal, FlatList, Pressable } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, Modal, FlatList, Pressable, ActivityIndicator } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import useUserId from '../hooks/useUserId';
 import User from '../model/User';
@@ -120,6 +120,15 @@ const EditProfileScreen = ({ navigation }) => {
             fetchUserDataBD();
         }
     }, [userID]);
+
+
+    if (profilePicture == '' && fullName == '' && email == '') {
+            return (
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" />
+              </View>
+            );
+          }
 
     return (
         <View style={styles.container}>
@@ -262,7 +271,12 @@ const styles = StyleSheet.create({
         borderRadius: 40, // Hacerlas circulares si así lo deseas
         borderWidth: 2,
         borderColor: '#ccc', // Puedes elegir otro color
-    }
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
 });
 
 export default EditProfileScreen;
