@@ -106,6 +106,17 @@ const GameSettingsScreen = ({ navigation }) => {
     });
   };
 
+  const selectAllCategories = () => {
+    const allCategoryIds = categoriesList.flatMap(group =>
+      group.children.map(child => child.value)
+    );
+    setSelectedCategories(allCategoryIds);
+  };
+
+  const deselectAllCategories = () => {
+    setSelectedCategories([]);
+  };
+
   if (!user) {
     return (
       <View style={styles.loadingContainer}>
@@ -115,48 +126,64 @@ const GameSettingsScreen = ({ navigation }) => {
   }
 
   return (
-    <View contentContainerStyle={styles.container}>
-      <Text style={styles.greeting}>Hola, {user.full_name} 👋</Text>
-
-      <Text style={styles.label}>Categorías</Text>
-      <SectionedMultiSelect
-        items={categoriesList}
-        uniqueKey='value'
-        subKey='children'
-        displayKey='label'
-        selectedItems={selectedCategories}
-        onSelectedItemsChange={setSelectedCategories}
-        IconRenderer={MaterialIcons}
-        single={false}>
-
-      </SectionedMultiSelect>
-
-      <Text style={styles.label}>Dificultad</Text>
-      <View style={styles.row}>
-        {['easy', 'medium', 'hard'].map((level) => (
-          <Button
-            key={level}
-            title={level.toUpperCase()}
-            color={difficulty === level ? '#6200ee' : '#aaa'}
-            onPress={() => setDifficulty(level)}
-          />
-        ))}
+    <View style={styles.container}>
+      <View style={styles.card}>
+        <Text style={styles.label}>Categories</Text>
+        <View style={styles.actionRow}>
+        <Button title="Select All" onPress={selectAllCategories} color="#03dac5" />
+        <Button title="Deselect All" onPress={deselectAllCategories} color="#cf6679" />
       </View>
-
-      <Text style={styles.label}>Número de preguntas: {questionCount}</Text>
-      <Slider
-        style={{ width: '100%', height: 40 }}
-        minimumValue={5}
-        maximumValue={20}
-        step={5}
-        value={questionCount}
-        onSlidingComplete={setQuestionCount}
-        minimumTrackTintColor="#6200ee"
-        maximumTrackTintColor="#000000"
-      />
-
-      <View style={styles.buttonContainer}>
-        <Button title="Comenzar Trivia" onPress={startGame} color="#6200ee" />
+        <SectionedMultiSelect
+          items={categoriesList}
+          uniqueKey='value'
+          subKey='children'
+          displayKey='label'
+          selectedItems={selectedCategories}
+          onSelectedItemsChange={setSelectedCategories}
+          IconRenderer={MaterialIcons}
+          single={false}
+          showDropDowns={true}
+          selectChildren={true}
+          readOnlyHeadings={true}
+          styles={{
+            selectToggle: { padding: 10, borderRadius: 8, backgroundColor: '#f0f0f0' },
+            chipsWrapper: { marginTop: 10 },
+            itemText: { fontSize: 14 },
+          }}
+        />
+      </View>
+  
+      <View style={styles.card}>
+        <Text style={styles.label}>Difficulty</Text>
+        <View style={styles.row}>
+          {['easy', 'medium', 'hard'].map((level) => (
+            <Button
+              key={level}
+              title={level.toUpperCase()}
+              color={difficulty === level ? '#6200ee' : '#bbb'}
+              onPress={() => setDifficulty(level)}
+            />
+          ))}
+        </View>
+      </View>
+  
+      <View style={styles.card}>
+        <Text style={styles.label}>Number of Questions: <Text style={styles.bold}>{questionCount}</Text></Text>
+        <Slider
+          style={{ width: '100%', height: 40 }}
+          minimumValue={5}
+          maximumValue={20}
+          step={5}
+          value={questionCount}
+          onSlidingComplete={setQuestionCount}
+          minimumTrackTintColor="#6200ee"
+          maximumTrackTintColor="#ccc"
+          thumbTintColor="#6200ee"
+        />
+      </View>
+  
+      <View style={styles.startButtonWrapper}>
+        <Button title="Start Game" onPress={startGame} color="#6200ee" />
       </View>
     </View>
   );
@@ -164,34 +191,50 @@ const GameSettingsScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: '#ffffff',
   },
-  greeting: {
-    fontSize: 20,
-    fontWeight: 'bold',
+  card: {
+    backgroundColor: '#fafafa',
+    borderRadius: 12,
+    padding: 15,
     marginBottom: 20,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 6,
+    elevation: 3,
+    marginTop: 25,
   },
   label: {
     fontSize: 16,
-    marginTop: 20,
+    fontWeight: '500',
     marginBottom: 10,
+    color: '#444',
+  },
+  bold: {
+    fontWeight: 'bold',
+    color: '#6200ee',
   },
   row: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginVertical: 10,
+    justifyContent: 'space-around',
+    marginTop: 10,
   },
-  buttonContainer: {
-    marginTop: 40,
+  actionRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+  startButtonWrapper: {
+    marginTop: 30,
+    paddingHorizontal: 10,
   },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  multiSelect: {
-    marginBottom: 20,
   },
 });
 
