@@ -46,8 +46,8 @@ const QuizScreen = ({ route, navigation }) => {
   if (!questions || questions.length === 0) {
     return (
       <View style={styles.centered}>
-        <Text>No se pudieron cargar preguntas. Intenta con otras categorías o dificultad.</Text>
-        <Button title="Volver" onPress={() => navigation.goBack()} />
+        <Text>Unable to load questions.</Text>
+        <Button title="Go Back" onPress={() => navigation.goBack()} />
       </View>
     );
   }
@@ -70,7 +70,7 @@ const QuizScreen = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.questionCounter}>
-        Pregunta {currentQuestionIndex + 1} de {questions.length}
+        Question {currentQuestionIndex + 1} of {questions.length}
       </Text>
       <Text style={styles.questionText}>
         {decodeURIComponent(currentQuestion.question)}
