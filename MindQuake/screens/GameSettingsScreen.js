@@ -8,52 +8,12 @@ import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 import {MaterialIcons} from '@expo/vector-icons'
 
 const categoriesList = [
-  {
-    label: 'Science',
-    value: 'group_science',
-    children: [
-      { label: 'Nature', value: 17 },
-      { label: 'Computers', value: 18 },
-      { label: 'Mathematics', value: 19 },
-      { label: 'Gadgets', value: 30 },
-    ],
-  },
-  {
-    label: 'Entertainment',
-    value: 'group_entertainment',
-    children: [
-      { label: 'Books', value: 10 },
-      { label: 'Film', value: 11 },
-      { label: 'Music', value: 12 },
-      { label: 'Musicals & Theatres', value: 13 },
-      { label: 'Television', value: 14 },
-      { label: 'Video Games', value: 15 },
-      { label: 'Board Games', value: 16 },
-      { label: 'Comics', value: 29 },
-      { label: 'Japanese Anime & Manga', value: 31 },
-      { label: 'Cartoon & Animations', value: 32 },
-    ],
-  },
-  {
-    label: 'Geography',
-    value: 'group_geography',
-    children: [{ label: 'Geography', value: 22 }],
-  },
-  {
-    label: 'History',
-    value: 'group_history',
-    children: [{ label: 'History', value: 23 }],
-  },
-  {
-    label: 'Sports',
-    value: 'group_sports',
-    children: [{ label: 'Sports', value: 21 }],
-  },
-  {
-    label: 'Art',
-    value: 'group_art',
-    children: [{ label: 'Art', value: 25 }],
-  },
+      { label: 'Arts & Literature', value: 'arts_and_literature' },
+      { label: 'Film & TV', value: 'film_and_tv' },
+      { label: 'History', value: 'history' },
+      { label: 'Science', value: 'science' },
+      { label: 'Geography', value: 'geography' },
+      { label: 'Sport & Leisure', value: 'sport_and_leisure' },
 ];
 
 const GameSettingsScreen = ({ navigation }) => {
@@ -107,10 +67,8 @@ const GameSettingsScreen = ({ navigation }) => {
   };
 
   const selectAllCategories = () => {
-    const allCategoryIds = categoriesList.flatMap(group =>
-      group.children.map(child => child.value)
-    );
-    setSelectedCategories(allCategoryIds);
+    const allCategoryValues = categoriesList.map(category => category.value);
+    setSelectedCategories(allCategoryValues);
   };
 
   const deselectAllCategories = () => {
@@ -136,15 +94,12 @@ const GameSettingsScreen = ({ navigation }) => {
         <SectionedMultiSelect
           items={categoriesList}
           uniqueKey='value'
-          subKey='children'
           displayKey='label'
           selectedItems={selectedCategories}
           onSelectedItemsChange={setSelectedCategories}
           IconRenderer={MaterialIcons}
           single={false}
-          showDropDowns={true}
-          selectChildren={true}
-          readOnlyHeadings={true}
+          showDropDowns={false}
           styles={{
             selectToggle: { padding: 10, borderRadius: 8, backgroundColor: '#f0f0f0' },
             chipsWrapper: { marginTop: 10 },

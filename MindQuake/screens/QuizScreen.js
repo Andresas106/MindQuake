@@ -13,32 +13,18 @@ const QuizScreen = ({ route, navigation }) => {
     const fetchQuestions = async () => {
       setIsLoading(true);
       try {
-        let allQuestions = [];
-        console.log(categories);
-        await Promise.all(
-          categories.map(async (category) => {
-            const response = await fetch(
-              `https://opentdb.com/api.php?amount=15&category=${category}&difficulty=${difficulty}&type=multiple`
-            );
-            const data = await response.json();
-
-            const formatted = data.results.map(q => ({
-              ...q,
-              answers: shuffleArray([...q.incorrect_answers, q.correct_answer]),
-            }));
-
-            allQuestions.push(...formatted);
-            console.log(allQuestions);
-          })
+        const categoryParam = categories.join(',');
+        const response = await fetch(
+          `https://the-trivia-api.com/api/questions?categories=${categoryParam}&limit=${questionCount}&difficulty=${difficulty}`
         );
+        const data = await response.json();
 
-        // Eliminar preguntas duplicadas (por pregunta)
-        const uniqueQuestions = Array.from(
-          new Map(allQuestions.map(q => [q.question, q])).values()
-        );
+        const formatted = data.map(q => ({
+          ...q,
+          answers: shuffleArray([...q.incorrectAnswers, q.correctAnswer]),
+        }));
 
-        const selected = shuffleArray(uniqueQuestions).slice(0, questionCount);
-        setQuestions(selected);
+        setQuestions(formatted);
       } catch (error) {
         console.error('Error fetching questions:', error);
       } finally {
