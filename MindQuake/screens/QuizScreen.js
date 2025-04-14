@@ -143,8 +143,8 @@ const QuizScreen = ({ route, navigation }) => {
   if (!questions || questions.length === 0) {
     return (
       <View style={styles.centered}>
-        <Text>No se pudieron cargar preguntas.</Text>
-        <Button title="Volver" onPress={() => navigation.goBack()} />
+        <Text>Couldn't load trivia questions</Text>
+        <Button title="Go Back" onPress={() => navigation.goBack()} />
       </View>
     );
   }
