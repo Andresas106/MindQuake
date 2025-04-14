@@ -8,6 +8,7 @@ import ProfileScreen from '../screens/ProfileScreen';
 import EditProfileScreen from '../screens/EditProfileScreen';
 import GameSettingsScreen from '../screens/GameSettingsScreen';
 import QuizScreen from '../screens/QuizScreen';
+import ResultsScreen from '../screens/ResultsScreen';
 
 const Stack = createStackNavigator();
 
@@ -21,6 +22,7 @@ const AppNavigator = () => {
         <Stack.Screen name='EditProfile' component={EditProfileScreen} options={{headerShown: false}}></Stack.Screen>
         <Stack.Screen name='GameSettings' component={GameSettingsScreen} options={{headerShown: false}}></Stack.Screen>
         <Stack.Screen name='Quiz' component={QuizScreen} options={{headerShown: false}}></Stack.Screen>
+        <Stack.Screen name='Results' component={ResultsScreen} options={{headerShown: false}}></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );

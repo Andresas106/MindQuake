@@ -1,282 +1,159 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, Modal, FlatList, Pressable, ActivityIndicator } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
-import useUserId from '../hooks/useUserId';
-import User from '../model/User';
+import React, { useEffect, useState } from 'react';
+import { View, Text, ActivityIndicator, StyleSheet, Button, Alert } from 'react-native';
+import { shuffleArray } from '../hooks/shuffleArray';
 import { supabase } from '../db/supabase';
+import User from '../model/User'; // IMPORTA TU CLASE USER
 
-const EditProfileScreen = ({ navigation }) => {
-    const [profilePicture, setProfilePicture] = useState(''); // Imagen actual del perfil
-    const [fullName, setFullName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const userID = useUserId();
-    const [avatarList, setAvatarList] = useState([]);
-    const [modalVisible, setModalVisible] = useState(false);
+const QuizScreen = ({ route, navigation }) => {
+  const { categories, questionCount, difficulty, user } = route.params;
 
-    const setAuthChanges = async () => {
-        const updates = {};
-        if (email) updates.email = email;
-        if (password) updates.password = password;
+  const [questions, setQuestions] = useState([]);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [correctAnswers, setCorrectAnswers] = useState(0);
 
-        if (Object.keys(updates).length === 0) return;
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      setIsLoading(true);
+      try {
+        const categoryParam = categories.join(',');
+        const response = await fetch(
+          `https://the-trivia-api.com/api/questions?categories=${categoryParam}&limit=${questionCount}&difficulty=${difficulty}`
+        );
+        const data = await response.json();
 
-        const { data, error } = await supabase.auth.updateUser(updates);
+        const formatted = data.map(q => ({
+          ...q,
+          answers: shuffleArray([...q.incorrectAnswers, q.correctAnswer]),
+        }));
 
-        if (error) {
-            console.error('Error updating auth:', error);
-            throw error;
-        }
+        setQuestions(formatted);
+      } catch (error) {
+        console.error('Error fetching questions:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-        return data;
+    fetchQuestions();
+  }, []);
+
+  const xpPerCorrect = {
+    easy: 50,
+    medium: 100,
+    hard: 150,
+  };
+
+  const handleAnswer = async (selectedAnswer) => {
+    const isCorrect = selectedAnswer === questions[currentQuestionIndex].correctAnswer;
+
+    if (isCorrect) {
+      setCorrectAnswers(prev => prev + 1);
     }
 
-    const setBDChanges = async () => {
-        const updates = {
-            full_name: fullName,
-            profile_picture: profilePicture,
-            email: email // <- también actualizamos el email aquí
-        };
+    if (currentQuestionIndex + 1 < questions.length) {
+      setCurrentQuestionIndex(prev => prev + 1);
+    } else {
+      const xpEarned = (isCorrect ? correctAnswers + 1 : correctAnswers) * xpPerCorrect[difficulty];
+      const updatedUser = new User({ ...user, xp: user.xp + xpEarned });
+      updatedUser.updateXp(updatedUser.xp); // Recalcula el nivel
 
+      try {
         const { error } = await supabase
-            .from('user')
-            .update(updates)
-            .eq('id', userID);
+          .from('user')
+          .update({
+            xp: updatedUser.xp,
+            level: updatedUser.level,
+          })
+          .eq('id', user.id);
 
         if (error) {
-            console.error('Error al actualizar base de datos:', error);
-            throw error;
+          console.error('Error updating xp and level', error);
+        } else {
+          Alert.alert('Quiz finished', `You won ${xpEarned} XP and now you are level ${updatedUser.level}`);
         }
+      } catch (err) {
+        console.error('Error giving xp:', err);
+      }
+
+      navigation.navigate('Results', {
+        user: updatedUser.toJSON(),
+        totalQuestions: questions.length,
+        correctAnswers,
+      });
     }
+  };
 
-    useEffect(() => {
-        const fetchAvatars = async () => {
-            const { data, error } = await supabase.storage.from('avatars').list('', {
-                limit: 100,
-                offset: 0,
-                sortBy: { column: 'name', order: 'asc' },
-            });
-        
-            if (error) {
-                console.error('Error al listar archivos en avatars:', error.message);
-                return;
-            }
-        
-            if (!data || data.length === 0) {
-                console.warn('No se encontraron archivos en el bucket avatars.');
-                return;
-            }
-        
-            const avatarURLs = data.map(file => {
-                const publicUrl = supabase.storage.from('avatars').getPublicUrl(file.name).data.publicUrl;
-                return publicUrl;
-            });
-            setAvatarList(avatarURLs);
-        };
-
-        fetchAvatars();
-    }, []);
-    
-    
-
-    const handleSave = async () => {
-        try {
-            await setAuthChanges();
-            await setBDChanges();
-            alert('User Profile updated correctly');
-            navigation.navigate('Profile');
-        } catch (error) {
-            alert('Error updating the user data');
-        }
-    }
-
-    useEffect(() => {
-        const fetchUserDataBD = async () => {
-            const { data, error } = await supabase
-                .from('user')  // Asegúrate de que el nombre de la tabla es correcto
-                .select()
-                .eq('id', userID)
-                .single(); // Evita errores si no hay datos
-
-            if (error) {
-                console.error("Error al obtener los datos del usuario:", error);
-            } else if (data) {
-                const userInstance = new User({
-                    id: data.id,
-                    full_name: data.full_name,
-                    email: data.email,
-                    profile_picture: data.profile_picture,
-                    xp: data.xp,
-                    level: data.level,
-                    created_at: data.created_at
-                });
-                setProfilePicture(userInstance.profile_picture);
-                setFullName(userInstance.full_name);
-                setEmail(userInstance.email);
-            }
-        };
-
-        if (userID) {
-            fetchUserDataBD();
-        }
-    }, [userID]);
-
-
-    if (profilePicture == '' && fullName == '' && email == '') {
-            return (
-              <View style={styles.loadingContainer}>
-                <ActivityIndicator size="large" />
-              </View>
-            );
-          }
-
+  if (isLoading) {
     return (
-        <View style={styles.container}>
-            <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-                <AntDesign name="arrowleft" size={30} color="black" />
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={() => setModalVisible(true)}>
-                <Image
-                    source={{ uri: profilePicture }}
-                    style={styles.profilePicture}
-                />
-            </TouchableOpacity>
-
-            {/*MODAL*/}
-            <Modal
-                visible={modalVisible}
-                transparent={true}
-                animationType="slide"
-            >
-                <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center' }}>
-                    <View style={{ backgroundColor: '#fff', margin: 20, borderRadius: 10, padding: 20 }}>
-                        <Text style={{ fontSize: 18, marginBottom: 10 }}>Choose an Avatar</Text>
-                        <FlatList
-                            data={avatarList}
-                            keyExtractor={(item, index) => index.toString()}
-                            numColumns={3}
-                            renderItem={({ item }) => (
-                                <Pressable onPress={() => {
-                                    setProfilePicture(item);
-                                    setModalVisible(false);
-                                }}>
-                                    <Image source={{ uri: item }} style={styles.avatarImage} />
-                                </Pressable>
-                            )}
-                        />
-                    </View>
-                </View>
-            </Modal>
-            {/** */}
-
-            {/* Campo para editar el apodo */}
-            <View style={styles.inputContainer}>
-                <Text style={styles.label}>Change Full Name</Text>
-                <TextInput
-                    style={styles.input}
-                    value={fullName}
-                    onChangeText={setFullName}
-                    placeholder="Enter your new full name"
-                />
-            </View>
-
-            {/* Campo para editar el correo electrónico */}
-            <View style={styles.inputContainer}>
-                <Text style={styles.label}>Change Email</Text>
-                <TextInput
-                    style={styles.input}
-                    value={email}
-                    onChangeText={setEmail}
-                    placeholder="Enter your new email"
-                    keyboardType="email-address"
-                />
-            </View>
-
-            {/* Campo para editar la contraseña */}
-            <View style={styles.inputContainer}>
-                <Text style={styles.label}>Change Password</Text>
-                <TextInput
-                    style={styles.input}
-                    value={password}
-                    onChangeText={setPassword}
-                    placeholder="Enter your new password"
-                    secureTextEntry={true}
-                />
-            </View>
-
-            {/* Botón para guardar los cambios */}
-            <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-                <Text style={styles.saveButtonText}>Save Changes</Text>
-            </TouchableOpacity>
-        </View>
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color="#6200ee" />
+      </View>
     );
-}
+  }
+
+  if (!questions || questions.length === 0) {
+    return (
+      <View style={styles.centered}>
+        <Text>No questions could be loaded</Text>
+        <Button title="Volver" onPress={() => navigation.goBack()} />
+      </View>
+    );
+  }
+
+  const currentQuestion = questions[currentQuestionIndex];
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.questionCounter}>
+        Pregunta {currentQuestionIndex + 1} de {questions.length}
+      </Text>
+      <Text style={styles.questionText}>
+        {decodeURIComponent(currentQuestion.question)}
+      </Text>
+
+      <View style={styles.answersContainer}>
+        {currentQuestion.answers.map((answer, index) => (
+          <Button
+            key={index}
+            title={decodeURIComponent(answer)}
+            onPress={() => handleAnswer(answer)}
+            color="#6200ee"
+          />
+        ))}
+      </View>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        backgroundColor: '#f5f5f5',
-        padding: 20,
-    },
-    backButton: {
-        position: 'absolute',
-        top: 20,
-        left: 10,
-    },
-    profilePicture: {
-        width: 120,
-        height: 120,
-        borderRadius: 60,
-        marginBottom: 30,
-        borderWidth: 2,
-        borderColor: '#76c7c0',
-    },
-    inputContainer: {
-        width: '90%',
-        marginVertical: 10,
-    },
-    label: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginBottom: 5,
-        color: '#333',
-    },
-    input: {
-        backgroundColor: '#fff',
-        padding: 10,
-        borderRadius: 8,
-        borderWidth: 1,
-        borderColor: '#ccc',
-        fontSize: 16,
-    },
-    saveButton: {
-        backgroundColor: '#3498db',
-        padding: 15,
-        borderRadius: 10,
-        marginTop: 20,
-        width: '90%',
-        alignItems: 'center',
-    },
-    saveButtonText: {
-        color: '#fff',
-        fontSize: 18,
-        fontWeight: 'bold',
-    },
-    avatarImage: {
-        width: 80,
-        height: 80,
-        margin: 5,
-        borderRadius: 40, // Hacerlas circulares si así lo deseas
-        borderWidth: 2,
-        borderColor: '#ccc', // Puedes elegir otro color
-    },
-    loadingContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-      },
+  container: {
+    padding: 20,
+    backgroundColor: '#fff',
+    flex: 1,
+    justifyContent: 'center',
+  },
+  centered: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  questionCounter: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  questionText: {
+    fontSize: 20,
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  answersContainer: {
+    marginTop: 10,
+    gap: 10,
+  },
 });
 
-export default EditProfileScreen;
+export default QuizScreen;
