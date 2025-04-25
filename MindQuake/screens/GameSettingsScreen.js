@@ -145,11 +145,23 @@ const GameSettingsScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  // ====================
+  // Layout Styles
+  // ====================
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#f5f5f5',
   },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  // ====================
+  // Card Components
+  // ====================
   card: {
     backgroundColor: '#fafafa',
     borderRadius: 12,
@@ -162,6 +174,10 @@ const styles = StyleSheet.create({
     elevation: 3,
     marginTop: 25,
   },
+
+  // ====================
+  // Text Styles
+  // ====================
   label: {
     fontSize: 16,
     fontWeight: '500',
@@ -172,6 +188,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#6200ee',
   },
+
+  // ====================
+  // Button & Action Styles
+  // ====================
   row: {
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -186,10 +206,24 @@ const styles = StyleSheet.create({
     marginTop: 30,
     paddingHorizontal: 10,
   },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+
+  // ====================
+  // Form Element Styles
+  // ====================
+  slider: {
+    width: '100%', 
+    height: 40
+  },
+  selectToggle: { 
+    padding: 10, 
+    borderRadius: 8, 
+    backgroundColor: '#f0f0f0' 
+  },
+  chipsWrapper: { 
+    marginTop: 10 
+  },
+  itemText: { 
+    fontSize: 14 
   },
 });
 

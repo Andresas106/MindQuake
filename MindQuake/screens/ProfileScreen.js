@@ -102,9 +102,9 @@ const ProfileScreen = ({ navigation }) => {
                         <Progress.Bar
                             progress={user.getCurrentXpInLevel() / user.calculateXpRequiredForNextLevel()}
                             width={200}
-                            height={5}
-                            borderRadius={5}
-                            color={'#76c7c0'}
+                            height={8}
+                            borderRadius={10}
+                            color={'#FF7C7C'}
                         />
                         <Text style={styles.text}>{user.level + 1}</Text>
                     </View>
@@ -162,158 +162,205 @@ const ProfileScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+    // ====================
+    // Main Container
+    // ====================
     container: {
-        flex: 1,
-        //     justifyContent: 'center',
-        alignItems: 'center',
+      flex: 1,
+      backgroundColor: '#f5f7fa',
+      paddingHorizontal: 20,
+      fontWeight: 'bold',
     },
+  
+    // ====================
+    // Loading Indicator
+    // ====================
+    loadingContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: '#f5f7fa',
+    },
+  
+    // ====================
+    // Navigation Elements
+    // ====================
     backButton: {
-        position: 'absolute',
-        top: 50,
-        left: 30,
+      position: 'absolute',
+      top: 60,
+      left: 20,
+      zIndex: 10,
     },
-    levelBadge: {
-        position: 'absolute',
-        bottom: 0, // Lo empuja fuera del círculo
-        right: -10,  // Lo empuja fuera del círculo
-        backgroundColor: '#e6677a',
-        paddingHorizontal: 6,
-        paddingVertical: 2,
-        borderRadius: 12,
-        borderWidth: 2,
-        borderColor: 'white',
-        elevation: 2,
-    },
-    levelText: {
-        fontSize: 12,
-        fontWeight: 'bold',
-        color: '#fff',
-    },
+  
+    // ====================
+    // Profile Header
+    // ====================
     imageContainer: {
-        width: 100, // Tamaño del círculo
-        height: 100,
-        borderRadius: 60, // Hace que sea un círculo
-        borderWidth: 8,
-        borderColor: 'lightgreen', // Borde verde
-        //overflow: 'hidden', // Asegura que la imagen no sobresalga del borde
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginBottom: 50,
-        marginTop: 75,
+      alignItems: 'center',
+      marginTop: 80,
+      marginBottom: 30,
     },
     image: {
-        width: 90, // Reduce el tamaño de la imagen
-        height: 90,
-        resizeMode: 'cover',
-        borderRadius: 45,
+      width: 120,
+      height: 120,
+      borderRadius: 60,
+      borderWidth: 4,
+      borderColor: '#76c7c0',
+    },
+    levelBadge: {
+      position: 'absolute',
+      bottom: 10,
+      right: 10,
+      backgroundColor: '#e6677a',
+      width: 30,
+      height: 30,
+      borderRadius: 15,
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderWidth: 2,
+      borderColor: '#fff',
+    },
+    levelText: {
+      fontSize: 14,
+      fontWeight: 'bold',
+      color: '#fff',
     },
     editBadge: {
-        position: 'absolute',
-        top: 0, // Lo empuja fuera del círculo
-        right: -10,  // Lo empuja fuera del círculo
-        backgroundColor: '#e6677a',
-        paddingHorizontal: 3,
-        paddingVertical: 3,
-        borderRadius: 50,
-        elevation: 2,
+      position: 'absolute',
+      top: 10,
+      right: 10,
+      backgroundColor: '#76c7c0',
+      width: 25,
+      height: 25,
+      borderRadius: 12.5,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
+  
+    // ====================
+    // XP Progress Bar
+    // ====================
     progressContainer: {
-        alignItems: 'center',
-        marginTop: 10,
-    },
-    progressWrapper: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between', // Asegura que los textos se separen sin hacer que se estire demasiado
-        width: 250, // Ancho fijo para la barra y los textos
-        marginVertical: 10, // Espacio vertical entre la barra y los textos
+      alignItems: 'center',
+      marginBottom: 30,
     },
     progressText: {
-        fontSize: 14,
-        color: '#333',
-        marginBottom: 8,
-        fontWeight: 'bold',
+      fontSize: 16,
+      fontWeight: '600',
+      color: '#FF7C7C',
+      marginBottom: 8,
+      
+    },
+    progressWrapper: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-around',
+      width: '80%',
+    },
+    progressLevelText: {
+      fontSize: 14,
+      fontWeight: 'bold',
+      color: '#FF7C7C',
+      minWidth: 30,
+      textAlign: 'center',
     },
     text: {
-        fontSize: 14,
         fontWeight: 'bold',
-        color: '#333',
     },
+  
+    // ====================
+    // User Info
+    // ====================
     textContainer: {
-        alignItems: 'center',
-        marginBottom: 20,
+      alignItems: 'center',
+      width: '100%',
     },
     nameText: {
-        fontSize: 35,
-        fontWeight: 'bold',
-        color: 'black'
+      fontSize: 24,
+      fontWeight: 'bold',
+      color: '#2d3748',
+      marginBottom: 5,
     },
+    usernameText: {
+      fontSize: 16,
+      color: '#718096',
+      marginBottom: 30,
+    },
+  
+    // ====================
+    // Achievements Section
+    // ====================
     achievementsText: {
-        fontSize: 25,
-        fontWeight: 'bold',
-        color: 'black',
-        marginTop: 20
+      fontSize: 20,
+      fontWeight: 'bold',
+      color: '#2d3748',
+      marginTop: 30,
+      marginBottom: 15,
     },
     achievementsContainer: {
-        alignItems: 'center',
-        width: '100%',
+      width: '100%',
+      paddingHorizontal: 20,
+      marginBottom: 30,
     },
     achievementsGrid: {
-        flexDirection: 'row',
-        justifyContent: 'space-evenly',
-        width: '100%',
-        marginTop: 10,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      flexWrap: 'wrap',
     },
     achievementImage: {
-        width: 70,
-        height: 70,
-        borderRadius: 10,
-        borderWidth: 2,
-        borderColor: '#76c7c0',
+      width: 80,
+      height: 80,
+      borderRadius: 10,
+      marginBottom: 15,
+      borderWidth: 2,
+      borderColor: '#76c7c0',
     },
     noAchievementsContainer: {
-        alignItems: 'center',
-        marginTop: 20,
-        width: 200,
-        height: 100,
-        backgroundColor: '#d3dbe8'
-    },
-    noAchievementsImage: {
-        width: 150,
-        height: 150,
-        marginBottom: 10,
+      width: '100%',
+      height: 120,
+      backgroundColor: '#edf2f7',
+      borderRadius: 10,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     noAchievementsText: {
-        fontSize: 16,
-        color: '#777',
-        textAlign: 'center',
+      fontSize: 16,
+      color: '#718096',
+    },
+  
+    // ====================
+    // Action Buttons
+    // ====================
+    buttonContainer: {
+      width: '100%',
+      paddingHorizontal: 20,
+    },
+    button: {
+      width: '100%',
+      paddingVertical: 15,
+      borderRadius: 60,
+      marginBottom: 15,
+      alignItems: 'center',
+      justifyContent: 'center',
+      //backgroundColor: '#fff',
+      borderWidth: 5,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: -2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 3,
     },
     buttonYellow: {
-        borderColor: 'gold',
-        borderWidth: 8,
-      },
-      buttonRed: {
-        borderColor: 'red',
-        borderWidth: 8,
-      },
-      buttonText: {
-        color: 'black',
-        fontSize: 16,
-        fontWeight: 'bold',
-      },
-      button: {
-        width: '50%',
-        padding: 15,
-        borderRadius: 50,
-        marginBottom: 40,
-        alignItems: 'center',
-        justifyContent: 'center',
-      },
-      loadingContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-      },
-});
+      borderColor: '#f6e05e',
+    },
+    buttonRed: {
+      borderColor: '#fc8181',
+    },
+    buttonText: {
+      fontSize: 16,
+      fontWeight: '600',
+      color: '#2d3748',
+    },
+  });
 
 export default ProfileScreen;
