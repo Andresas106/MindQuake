@@ -151,7 +151,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#F2F1EB',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   loadingContainer: {
     flex: 1,
@@ -165,6 +167,8 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: '#fafafa',
     borderRadius: 12,
+    borderWidth: '8',
+    borderColor: '#EFBC5E',
     padding: 15,
     marginBottom: 20,
     shadowColor: '#000',
@@ -173,6 +177,8 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     elevation: 3,
     marginTop: 25,
+    width: '80%',
+    alignItems: 'center',
   },
 
   // ====================
@@ -194,12 +200,12 @@ const styles = StyleSheet.create({
   // ====================
   row: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-betwen',
     marginTop: 10,
   },
   actionRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     marginBottom: 10,
   },
   startButtonWrapper: {

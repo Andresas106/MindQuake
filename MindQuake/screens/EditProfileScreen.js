@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       alignItems: 'center',
-      backgroundColor: '#f8f9fa',
+      backgroundColor: '#F2F1EB',
       padding: 25,
       paddingTop: 60,
     },
@@ -302,7 +302,7 @@ const styles = StyleSheet.create({
     // Save Button
     // ====================
     saveButton: {
-      backgroundColor: '#76c7c0',
+      backgroundColor: '#EFBC5E',
       padding: 16,
       borderRadius: 12,
       marginTop: 25,

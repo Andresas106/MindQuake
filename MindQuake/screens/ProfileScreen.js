@@ -86,7 +86,7 @@ const ProfileScreen = ({ navigation }) => {
                         <Text style={styles.levelText}>{user.level}</Text>
                     </View>
                     <View style={styles.editBadge}>
-                        <AntDesign name="edit" size={15} color="white" />
+                        <AntDesign name="edit" size={20} color="white" />
                     </View>
                 </View>
 
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
     // ====================
     container: {
       flex: 1,
-      backgroundColor: '#f5f7fa',
+      backgroundColor: '#F2F1EB',
       paddingHorizontal: 20,
       fontWeight: 'bold',
     },
@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
     backButton: {
       position: 'absolute',
       top: 60,
-      left: 20,
+      //left: 20,
       zIndex: 10,
     },
   
@@ -198,20 +198,20 @@ const styles = StyleSheet.create({
     imageContainer: {
       alignItems: 'center',
       marginTop: 80,
-      marginBottom: 30,
+      //marginBottom: 10,
     },
     image: {
       width: 120,
       height: 120,
       borderRadius: 60,
       borderWidth: 4,
-      borderColor: '#76c7c0',
+      borderColor: '#95E752',
     },
     levelBadge: {
-      position: 'absolute',
-      bottom: 10,
-      right: 10,
-      backgroundColor: '#e6677a',
+      //position: 'absolute',
+      bottom: 30,
+      left: 30,
+      backgroundColor: '#E76E63',
       width: 30,
       height: 30,
       borderRadius: 15,
@@ -226,13 +226,13 @@ const styles = StyleSheet.create({
       color: '#fff',
     },
     editBadge: {
-      position: 'absolute',
-      top: 10,
-      right: 10,
-      backgroundColor: '#76c7c0',
-      width: 25,
-      height: 25,
-      borderRadius: 12.5,
+      //position: 'absolute',
+      bottom: 145,
+      left: 45,
+      backgroundColor: '#E76E63',
+      width: 35,
+      height: 35,
+      borderRadius: 20,
       justifyContent: 'center',
       alignItems: 'center',
     },
@@ -336,7 +336,8 @@ const styles = StyleSheet.create({
       paddingHorizontal: 20,
     },
     button: {
-      width: '100%',
+      minWidth: '50px',
+      width: '30%',
       paddingVertical: 15,
       borderRadius: 60,
       marginBottom: 15,
@@ -351,14 +352,14 @@ const styles = StyleSheet.create({
       elevation: 3,
     },
     buttonYellow: {
-      borderColor: '#f6e05e',
+      borderColor: '#95E752',
     },
     buttonRed: {
       borderColor: '#fc8181',
     },
     buttonText: {
       fontSize: 16,
-      fontWeight: '600',
+      fontWeight: 'bold',
       color: '#2d3748',
     },
   });

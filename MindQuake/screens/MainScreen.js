@@ -122,6 +122,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#F2F1EB',
   },
   logoimage: {
     width: 200,
@@ -133,7 +134,7 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 60, // Hace que sea un círculo
     borderWidth: 8,
-    borderColor: 'lightgreen', // Borde verde
+    borderColor: '#95E752', // Borde verde
     //overflow: 'hidden', // Asegura que la imagen no sobresalga del borde
     justifyContent: 'center',
     alignItems: 'center',
@@ -155,11 +156,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   buttonYellow: {
-    borderColor: 'gold',
+    borderColor: '#EFBC5E',
     borderWidth: 8,
   },
   buttonBlue: {
-    borderColor: 'dodgerblue',
+    borderColor: '#E76E63',
     borderWidth: 8,
   },
   buttonText: {
