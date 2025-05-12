@@ -1,8 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
+import { View, Text, StyleSheet, Button, Image } from 'react-native';
 
 const ResultsScreen = ({ route, navigation }) => {
-  const { user, totalQuestions, correctAnswers } = route.params;
+  const { user, totalQuestions, newCorrectAnswers, unlockedAchievements = [] } = route.params;
 
   const xpGained = user.xp; // ya está actualizado
   const level = user.level;
@@ -12,15 +12,30 @@ const ResultsScreen = ({ route, navigation }) => {
       <Text style={styles.title}>Quiz Results</Text>
 
       <Text style={styles.resultText}>
-        Correct answers: {correctAnswers} of {totalQuestions}
+        Correct answers: {newCorrectAnswers} of {totalQuestions}
       </Text>
 
       <Text style={styles.resultText}>Actual Level: {level}</Text>
       <Text style={styles.resultText}>Total XP: {xpGained}</Text>
 
+      {unlockedAchievements.length > 0 && (
+        <>
+          <Text style={styles.achievementTitle}>Unlocked Achievements</Text>
+          <View style={styles.achievementsContainer}>
+            {unlockedAchievements.map((achievement) => (
+              <Image
+                key={achievement.id}
+                source={{ uri: achievement.icon }}
+                style={styles.achievementIcon}
+              />
+            ))}
+          </View>
+        </>
+      )}
+
       <View style={styles.buttonContainer}>
         <Button
-          title="Volver al inicio"
+          title="Home"
           onPress={() => navigation.navigate('Main')}
           color="#6200ee"
         />
@@ -33,7 +48,6 @@ const styles = StyleSheet.create({
   container: {
     padding: 30,
     backgroundColor: '#fff',
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -43,14 +57,27 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     color: '#6200ee',
   },
-  image: {
-    width: 120,
-    height: 120,
-    marginBottom: 20,
-  },
   resultText: {
     fontSize: 18,
     marginVertical: 5,
+  },
+  achievementTitle: {
+    fontSize: 20,
+    marginTop: 20,
+    marginBottom: 10,
+    fontWeight: 'bold',
+    color: '#444',
+  },
+  achievementsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    gap: 10,
+  },
+  achievementIcon: {
+    width: 60,
+    height: 60,
+    margin: 5,
   },
   buttonContainer: {
     marginTop: 30,

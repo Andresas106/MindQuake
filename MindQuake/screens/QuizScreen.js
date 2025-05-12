@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ActivityIndicator, StyleSheet, Button, Alert, Image } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet, Button, Alert } from 'react-native';
 import { shuffleArray } from '../hooks/shuffleArray';
 import { supabase } from '../db/supabase';
 import User from '../model/User';
-import checkAndUnlockAchievements from '../utils/checkAndUnlockAchievements'; // Ahora importamos desde utils
-import Modal from 'react-native-modal';
+import checkAndUnlockAchievements from '../utils/checkAndUnlockAchievements'; // 👈 Import añadido
 
 const QuizScreen = ({ route, navigation }) => {
   const { categories, questionCount, difficulty, user } = route.params;
@@ -14,8 +13,6 @@ const QuizScreen = ({ route, navigation }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [correctByCategory, setCorrectByCategory] = useState({});
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [unlockedAchievements, setUnlockedAchievements] = useState([]);
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -56,7 +53,7 @@ const QuizScreen = ({ route, navigation }) => {
     const updatedCorrectByCategory = { ...correctByCategory };
 
     if (isCorrect) {
-      newCorrectAnswers++;
+      newCorrectAnswers = newCorrectAnswers + 1;
       const category = questions[currentQuestionIndex].category;
       updatedCorrectByCategory[category] = (updatedCorrectByCategory[category] || 0) + 1;
     }
@@ -67,9 +64,11 @@ const QuizScreen = ({ route, navigation }) => {
       setCurrentQuestionIndex(prev => prev + 1);
     } else {
       // Fin del quiz → otorgar XP y redirigir
-      const xpEarned = correctAnswers * xpPerCorrect[difficulty];
+      const xpEarned = newCorrectAnswers * xpPerCorrect[difficulty];
       const updatedUser = new User({ ...user, xp: user.xp + xpEarned });
       updatedUser.updateXp(updatedUser.xp); // Recalcula el nivel
+
+      let newlyUnlocked = [];
       try {
         const { error } = await supabase
           .from('user')
@@ -79,13 +78,68 @@ const QuizScreen = ({ route, navigation }) => {
           })
           .eq('id', user.id);
 
-        // Obtener estadísticas por categoría
-        const newlyUnlocked = await checkAndUnlockAchievements(user.id, updatedCorrectByCategory);
-        setUnlockedAchievements(newlyUnlocked);
 
-        if (newlyUnlocked.length > 0) {
-          setIsModalVisible(true);
+        // Actualizar estadísticas por categoría
+        for (const [category, count] of Object.entries(updatedCorrectByCategory)) {
+          const { data: existingStat, error: fetchError } = await supabase
+            .from('user_category_stats')
+            .select('id, correct_answers')
+            .eq('user_id', user.id)
+            .eq('category', category)
+            .maybeSingle();
+
+          if (fetchError) {
+            console.error(`Error fetching stats for ${category}:`, fetchError);
+            continue;
+          }
+
+          if (existingStat) {
+            // Si ya existe, sumamos
+            const { error: updateError } = await supabase
+              .from('user_category_stats')
+              .update({
+                correct_answers: existingStat.correct_answers + count,
+                updated_at: new Date().toISOString(),
+              })
+              .eq('id', existingStat.id);
+
+
+            if (updateError) console.error(`Error updating ${category}:`, updateError);
+          } else {
+            // Si no existe, creamos
+            const { error: insertError } = await supabase
+              .from('user_category_stats')
+              .insert({
+                user_id: user.id,
+                category,
+                correct_answers: count,
+              });
+
+
+            if (insertError) console.error(`Error inserting ${category}:`, insertError);
+          }
         }
+
+        // Obtener estadísticas
+        const { data: existingStats, error: statsError } = await supabase
+          .from('user_category_stats')
+          .select('category, correct_answers')
+          .eq('user_id', user.id);
+
+        if (statsError) {
+          console.error('Error fetching existing stats:', statsError);
+        } else {
+          const totalCorrectByCategory = { ...updatedCorrectByCategory };
+
+          // Sumar cada estadística anterior
+          for (const stat of existingStats) {
+            totalCorrectByCategory[stat.category] = stat.correct_answers;
+          }
+          
+
+          newlyUnlocked = await checkAndUnlockAchievements(user.id, totalCorrectByCategory) || [];
+        }
+
 
         if (error) {
           console.error('Error updating XP:', error);
@@ -96,10 +150,15 @@ const QuizScreen = ({ route, navigation }) => {
         console.error('Error giving xp:', err);
       }
 
+
       navigation.navigate('Results', {
-        user: { ...user, xp: user.xp + xpEarned },
+        user: { ...user, xp: updatedUser.xp, level: updatedUser.level },
         totalQuestions: questions.length,
-        correctAnswers,
+        newCorrectAnswers: newCorrectAnswers,
+        unlockedAchievements: newlyUnlocked.map(a => ({
+          id: a.id,
+          icon: a.icon,
+        })),
       });
     }
   };
@@ -126,7 +185,7 @@ const QuizScreen = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.questionCounter}>
-        Pregunta {currentQuestionIndex + 1} de {questions.length}
+        Question {currentQuestionIndex + 1} of {questions.length}
       </Text>
       <Text style={styles.questionText}>
         {decodeURIComponent(currentQuestion.question)}
@@ -142,18 +201,6 @@ const QuizScreen = ({ route, navigation }) => {
           />
         ))}
       </View>
-
-      <Modal isVisible={isModalVisible} onBackdropPress={() => setIsModalVisible(false)}>
-        <View style={styles.modalContent}>
-          <Text style={styles.modalTitle}>¡Logros Desbloqueados!</Text>
-          {unlockedAchievements.map((achievement) => (
-            <View key={achievement.id} style={styles.achievement}>
-              <Image source={{ uri: achievement.icon }} style={styles.achievementImage} />
-              <Text>{achievement.name}</Text>
-            </View>
-          ))}
-        </View>
-      </Modal>
     </View>
   );
 };
@@ -185,27 +232,6 @@ const styles = StyleSheet.create({
   answersContainer: {
     marginTop: 10,
     gap: 10,
-  },
-  modalContent: {
-    backgroundColor: '#fff',
-    padding: 20,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 15,
-    textAlign: 'center',
-  },
-  achievement: {
-    alignItems: 'center',
-    marginBottom: 15,
-  },
-  achievementImage: {
-    width: 100,
-    height: 100,
-    marginBottom: 10,
   },
 });
 
