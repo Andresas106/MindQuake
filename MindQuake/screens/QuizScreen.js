@@ -3,6 +3,7 @@ import { View, Text, ActivityIndicator, StyleSheet, Button, Alert } from 'react-
 import { shuffleArray } from '../hooks/shuffleArray';
 import { supabase } from '../db/supabase';
 import User from '../model/User';
+import checkAndUnlockAchievements from '../utils/checkAndUnlockAchievements'; // 👈 Import añadido
 
 const QuizScreen = ({ route, navigation }) => {
   const { categories, questionCount, difficulty, user } = route.params;
@@ -54,7 +55,7 @@ const QuizScreen = ({ route, navigation }) => {
     if (isCorrect) {
       newCorrectAnswers++;
       const category = questions[currentQuestionIndex].category;
-      updatedCorrectByCategory[category] = (updatedCorrectByCategory[category] || 0) + 1; 
+      updatedCorrectByCategory[category] = (updatedCorrectByCategory[category] || 0) + 1;
     }
 
     if (currentQuestionIndex + 1 < questions.length) {
@@ -68,12 +69,12 @@ const QuizScreen = ({ route, navigation }) => {
       updatedUser.updateXp(updatedUser.xp); // Recalcula el nivel
       try {
         const { error } = await supabase
-        .from('user')
-        .update({
-          xp: updatedUser.xp,
-          level: updatedUser.level,
-        })
-        .eq('id', user.id);
+          .from('user')
+          .update({
+            xp: updatedUser.xp,
+            level: updatedUser.level,
+          })
+          .eq('id', user.id);
 
 
         // Actualizar estadísticas por categoría
@@ -114,6 +115,33 @@ const QuizScreen = ({ route, navigation }) => {
             if (insertError) console.error(`Error inserting ${category}:`, insertError);
           }
         }
+
+        // Obtener estadísticas
+        const { data: existingStats, error: statsError } = await supabase
+          .from('user_category_stats')
+          .select('category, correct_answers')
+          .eq('user_id', user.id);
+
+        if (statsError) {
+          console.error('Error fetching existing stats:', statsError);
+        } else {
+          const totalCorrectByCategory = { ...updatedCorrectByCategory };
+
+          // Sumar cada estadística anterior
+          for (const stat of existingStats) {
+            totalCorrectByCategory[stat.category] = stat.correct_answers;
+            console.log(stat.correct_answers);
+          }
+          
+          console.log('Total correcto por categoría:', JSON.stringify(totalCorrectByCategory, null, 2));
+
+          const newlyUnlocked = await checkAndUnlockAchievements(user.id, totalCorrectByCategory);
+
+          if (newlyUnlocked.length > 0) {
+            console.log('Logros desbloqueados:', newlyUnlocked.map(a => a.name));
+          }
+        }
+
 
         if (error) {
           console.error('Error updating XP:', error);

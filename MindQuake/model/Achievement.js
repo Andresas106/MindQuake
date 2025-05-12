@@ -14,3 +14,5 @@ class Achievement {
         return this.unlockedAt ? new Date(this.unlockedAt).toLocaleDateString() : 'Not unlocked yet';
     }
 }
+
+export default Achievement;
