@@ -72,7 +72,6 @@ const ProfileScreen = ({ navigation }) => {
             <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Main')}>
                 <AntDesign name="arrowleft" size={35} color="black" />
             </TouchableOpacity>
-
             {user && (
                 <View style={styles.imageContainer}>
                     <TouchableOpacity onPress={() => navigation.navigate('EditProfile')}>
@@ -114,29 +113,11 @@ const ProfileScreen = ({ navigation }) => {
             {user && (
                 <View style={styles.textContainer}>
                     <Text style={styles.nameText}>{user.full_name}</Text>
-                    <Text style={styles.achievementsText}>Achievements</Text>
                     <TouchableOpacity
-                        style={styles.achievementsContainer}
-                        onPress={() => /*navigation.navigate('AchievementsOverview', { achievements })*/ console.log('fuck this')}
+                        style={styles.button}
+                        onPress={() => navigation.navigate('AchievementsOverview', { achievements })}
                     >
-                        {achievements.length > 0 ? (
-                            <View style={styles.achievementsGrid}>
-                                {achievements.slice(0, 3).map((achievement, index) => (
-                                    <Image
-                                        key={index}
-                                        source={{ uri: achievement.icon }}
-                                        style={styles.achievementImage}
-                                    />
-                                ))}
-                            </View>
-                        ) : (
-                            <View style={styles.noAchievementsContainer}>
-                                <Image
-                                    source={{ uri: 'URL_ILUSTRACION_SIN_LOGROS' }}
-                                    style={styles.noAchievementsImage}
-                                />
-                            </View>
-                        )}
+                      <Text style={styles.buttonText}>Achievements</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                             style={[styles.button, styles.buttonYellow]}
@@ -337,7 +318,7 @@ const styles = StyleSheet.create({
     },
     button: {
       minWidth: '50px',
-      width: '30%',
+      width: '35%',
       paddingVertical: 15,
       borderRadius: 60,
       marginBottom: 15,
