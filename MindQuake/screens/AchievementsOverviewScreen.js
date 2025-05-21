@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, FlatList, Modal, Image, Pressable, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, FlatList, Modal, Image, Pressable, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import Achievement from '../model/Achievement'; // ajusta la ruta si es necesario
+import { AntDesign } from '@expo/vector-icons';
 
 const numColumns = 3;
 const screenWidth = Dimensions.get('window').width;
@@ -35,6 +36,10 @@ const AchievementsOverviewScreen = ({ route }) => {
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+          <AntDesign name="arrowleft" size={35} color="black" />
+        </TouchableOpacity>
+        <Text style={styles.title}>Achievements</Text>
       <FlatList
         data={achievements}
         keyExtractor={(item) => item.id.toString()}
@@ -75,6 +80,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
+  },
+  title: {
+    fontSize: 27,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 10
+  },
+  backButton: {
+    position: 'absolute',
+    top: 60,
+    left: 10,
+    zIndex: 10,
   },
   grid: {
     justifyContent: 'center',

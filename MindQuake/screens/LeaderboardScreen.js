@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, Image } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native';
 import useUserId from '../hooks/useUserId';
 import { supabase } from '../db/supabase';
 import User from '../model/User';
+import { AntDesign } from '@expo/vector-icons';
 
-const LeaderboardScreen = () => {
+const LeaderboardScreen = ({ navigation }) => {
   const userId = useUserId();
   const [leaderboard, setLeaderboard] = useState([]);
   const [currentUserData, setCurrentUserData] = useState(null);
@@ -54,33 +55,39 @@ const LeaderboardScreen = () => {
         item.isCurrentUser && styles.highlightedUser,
       ]}
     >
+      {item.profile_picture ? (
+        <Image source={{ uri: item.profile_picture }} style={styles.avatar} />
+      ) : null}
       <View style={styles.userInfo}>
-        <Text style={styles.username}>
-          #{item.position} - {item.full_name} (Level {item.level})
-        </Text>
-        {item.profile_picture ? (
-          <Image source={{ uri: item.profile_picture }} style={styles.avatar} />
-        ) : null}
+        <Text style={styles.username}>{item.full_name}</Text>
+        <Text style={styles.level}>Level {item.level}</Text>
       </View>
+      <Text style={styles.rank}>#{item.position}</Text>
     </View>
   );
 
   return (
     <View style={styles.screen}>
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+          <AntDesign name="arrowleft" size={35} color="black" />
+        </TouchableOpacity>
+        <Text style={styles.title}>Leaderboard</Text>
       <FlatList
         ListHeaderComponent={
           <>
             {currentUserData && (
-              <View style={styles.currentUserCard}>
-                <Text style={styles.username}>
-                  #{currentUserData.position} - {currentUserData.full_name} (Level {currentUserData.level})
-                </Text>
+              <View style={[
+                styles.userContainer,
+                styles.highlightedUser,
+              ]}>
                 {currentUserData.profile_picture ? (
-                  <Image
-                    source={{ uri: currentUserData.profile_picture }}
-                    style={styles.avatar}
-                  />
+                  <Image source={{ uri: currentUserData.profile_picture }} style={styles.avatar} />
                 ) : null}
+                <View style={styles.userInfo}>
+                  <Text style={styles.username}>{currentUserData.full_name}</Text>
+                  <Text style={styles.level}>Level {currentUserData.level}</Text>
+                </View>
+                <Text style={styles.rank}>#{currentUserData.position}</Text>
               </View>
             )}
             <Text style={styles.podiumTitle}>🏆 Top 10 Players</Text>
@@ -89,7 +96,6 @@ const LeaderboardScreen = () => {
         data={leaderboard}
         keyExtractor={item => item.id}
         renderItem={renderUser}
-        contentContainerStyle={styles.container}
       />
     </View>
   );
@@ -98,41 +104,56 @@ const LeaderboardScreen = () => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#121212',
-    
-  },
-  container: {
+    paddingVertical: 65,
     paddingHorizontal: 20,
-    paddingVertical: 100,
+  },
+  title: {
+    fontSize: 27,
+    fontWeight: 'bold',
+    color: '#333',
+    textAlign: 'center',
+    marginBottom: 10
+  },
+  backButton: {
+    position: 'absolute',
+    top: 60,
+    left: 10,
+    zIndex: 10,
   },
   userContainer: {
-    backgroundColor: '#1e1e1e',
-    padding: 16,
-    marginBottom: 12,
-    borderRadius: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f9f9f4', // fondo crema claro
+    borderRadius: 20,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    marginVertical: 6,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 6,
+    elevation: 3,
   },
   highlightedUser: {
     borderColor: '#5c9ded',
     borderWidth: 2,
-    backgroundColor: '#2e3a59',
   },
   userInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flex: 1,
   },
   username: {
-    fontSize: 18,
-    color: '#fff',
+    fontSize: 16,
     fontWeight: 'bold',
-    flex: 1,
-    flexWrap: 'wrap',
+    color: '#333',
   },
-  podiumTitle: {
-    fontSize: 22,
-    color: '#f2f2f2',
+  level: {
+    fontSize: 14,
+    color: '#666',
+  },
+  rank: {
+    fontSize: 18,
     fontWeight: 'bold',
-    marginVertical: 16,
-    textAlign: 'center',
+    color: '#e0a200', // dorado/naranja
   },
   currentUserCard: {
     backgroundColor: '#292929',
@@ -148,10 +169,17 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 25,
-    marginLeft: 12,
-    borderWidth: 1,
-    borderColor: '#ccc',
+    borderWidth: 2,
+    borderColor: '#00bcd4', // azul suave
+    marginRight: 12,
   },
+  podiumTitle: {
+  fontSize: 18,
+  fontWeight: '600',
+  textAlign: 'center',
+  marginVertical: 16,
+  color: '#333',
+},
 });
 
 export default LeaderboardScreen;
