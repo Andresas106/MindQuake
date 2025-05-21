@@ -10,6 +10,7 @@ import GameSettingsScreen from '../screens/GameSettingsScreen';
 import QuizScreen from '../screens/QuizScreen';
 import ResultsScreen from '../screens/ResultsScreen';
 import AchievementsOverviewScreen from '../screens/AchievementsOverviewScreen';
+import LeaderboardScreen from '../screens/LeaderboardScreen';
 
 const Stack = createStackNavigator();
 
@@ -25,6 +26,7 @@ const AppNavigator = () => {
         <Stack.Screen name='Quiz' component={QuizScreen} options={{headerShown: false}}></Stack.Screen>
         <Stack.Screen name='Results' component={ResultsScreen} options={{headerShown: false}}></Stack.Screen>
         <Stack.Screen name='AchievementsOverview' component={AchievementsOverviewScreen} options={{headerShown: false}}></Stack.Screen>
+        <Stack.Screen name='Leaderboard' component={LeaderboardScreen} options={{headerShown: false}}></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );

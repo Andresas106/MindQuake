@@ -147,8 +147,8 @@ const ProfileScreen = ({ navigation }) => {
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.button, styles.buttonYellow]}
-            onPress={() => {
-            }}>
+            onPress={() => navigation.navigate('Leaderboard') 
+            }>
             <Text style={styles.buttonText}>Leaderboard</Text>
           </TouchableOpacity>
 
