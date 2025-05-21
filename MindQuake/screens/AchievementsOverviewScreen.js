@@ -7,7 +7,7 @@ const numColumns = 3;
 const screenWidth = Dimensions.get('window').width;
 const itemSize = screenWidth / numColumns - 20;
 
-const AchievementsOverviewScreen = ({ route }) => {
+const AchievementsOverviewScreen = ({ route, navigation }) => {
   const rawAchievements = route.params.achievements;
   const achievements = rawAchievements.map((a) => new Achievement(a));
 
@@ -79,12 +79,14 @@ const AchievementsOverviewScreen = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
+    paddingVertical: 65,
+    paddingHorizontal: 20,
   },
   title: {
     fontSize: 27,
     fontWeight: 'bold',
     textAlign: 'center',
+    color: 'black',
     marginBottom: 10
   },
   backButton: {
@@ -104,7 +106,6 @@ const styles = StyleSheet.create({
     margin: 5,
     alignItems: 'center',
     justifyContent: 'center',
-    //backgroundColor: '#1e1e1e',
     borderRadius: 12,
   },
   achievementImage: {

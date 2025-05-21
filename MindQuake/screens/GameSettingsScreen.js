@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import {View, StyleSheet, Text, Button, ActivityIndicator } from 'react-native';
+import {View, StyleSheet, Text, Button, ActivityIndicator, TouchableOpacity } from 'react-native';
 import Slider from '@react-native-community/slider';
 import useUserId from '../hooks/useUserId';
 import User from '../model/User';
 import { supabase } from '../db/supabase';
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 import {MaterialIcons} from '@expo/vector-icons'
+import { AntDesign } from '@expo/vector-icons';
 
 const categoriesList = [
       { label: 'Arts & Literature', value: 'arts_and_literature' },
@@ -85,6 +86,9 @@ const GameSettingsScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+          <AntDesign name="arrowleft" size={35} color="black" />
+        </TouchableOpacity>
       <View style={styles.card}>
         <Text style={styles.label}>Categories</Text>
         <View style={styles.actionRow}>
@@ -154,6 +158,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#F2F1EB',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  backButton: {
+    position: 'absolute',
+    top: 60,
+    left: 10,
+    zIndex: 10,
   },
   loadingContainer: {
     flex: 1,
