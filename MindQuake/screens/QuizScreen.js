@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View, Text, ActivityIndicator, StyleSheet, Button, Alert } from 'react-native';
 import { shuffleArray } from '../hooks/shuffleArray';
 import { supabase } from '../db/supabase';

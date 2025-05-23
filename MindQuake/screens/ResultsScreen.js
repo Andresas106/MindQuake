@@ -1,4 +1,3 @@
-import React from 'react';
 import { View, Text, StyleSheet, Button, Image } from 'react-native';
 
 const ResultsScreen = ({ route, navigation }) => {

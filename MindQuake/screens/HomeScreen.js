@@ -1,6 +1,5 @@
-import React, {useState, useCallback } from 'react';
-import { View, TouchableOpacity, StyleSheet, Text, Modal, TextInput } from 'react-native';
-import { Image } from '@rneui/themed';
+import {useState, useCallback } from 'react';
+import { View, TouchableOpacity, StyleSheet, Text, Modal, TextInput, Image } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { supabase } from '../db/supabase'
 import { useFocusEffect } from '@react-navigation/native';

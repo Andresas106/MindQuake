@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, Modal, Switch } from 'react-native';
-import { Image } from '@rneui/themed';
+import { useState, useEffect } from 'react';
+import { View, TouchableOpacity, Text, StyleSheet, Modal, Switch, Image } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import useUserId from '../hooks/useUserId';
 import { supabase } from '../db/supabase'

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { View, Text, FlatList, Modal, Image, Pressable, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import Achievement from '../model/Achievement'; // ajusta la ruta si es necesario
 import { AntDesign } from '@expo/vector-icons';

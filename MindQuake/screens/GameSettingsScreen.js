@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {View, StyleSheet, Text, Button, ActivityIndicator, TouchableOpacity } from 'react-native';
 import Slider from '@react-native-community/slider';
 import useUserId from '../hooks/useUserId';
