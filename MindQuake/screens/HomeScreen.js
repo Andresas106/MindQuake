@@ -184,24 +184,29 @@ const styles = StyleSheet.create({
 
   button: {
     width: '50%',
-    padding: 15,
-    borderRadius: 50,
-    marginBottom: 40,
+    paddingVertical: 15,
+    borderRadius: 60,
+    marginBottom: 45,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#F2F1EB',
+    borderWidth: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   buttonYellow: {
-    borderColor: 'gold',
-    borderWidth: 8,                               
+    borderColor: '#95E752',
   },
   buttonBlue: {
-    borderColor: 'dodgerblue',
-    borderWidth: 8,
+    borderColor: '#63B9E7',
   },
   buttonText: {
-    color: 'black',
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'Rubik_700Bold',
+    fontSize: 20,
+    color: '#2d3748',
   },
   modalContainer: {
     flex: 1,
@@ -218,30 +223,41 @@ const styles = StyleSheet.create({
     width: 326,
   },
   modalText: {
+    fontFamily: 'Rubik_700Bold',
     fontSize: 30,
-    marginBottom: 10,
+    marginBottom: 5,
     marginLeft: 15,
-    fontWeight: "bold"
   },
 
   modalSubText: {
+    fontFamily: 'Rubik_700Bold',
     fontSize: 18,
-    marginTop: 10,
+    marginTop: 5,
     color: "gray",
   },
 
   backButton: {
     position: 'absolute',
     top: 20,
-    left: 10,
+    left: 5,
+    backgroundColor: '#e9ecef',
+    borderRadius: 20,
+    padding: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   label: {
+    fontFamily: 'Rubik_700Bold',
     fontSize: 16,
     marginBottom: 5,
     alignSelf: 'flex-start',
     marginTop: 20,
   },
   input: {
+    fontFamily: 'Rubik_400Regular',
       width: "100%",
       alignSelf: 'flex-start',
       height: 50,
@@ -260,15 +276,17 @@ const styles = StyleSheet.create({
       width: '100%',
   },
   submitButtonText: {
+    fontFamily: 'Rubik_700Bold',
       color: '#FFFFFF',
       fontSize: 16,
   },
   footerText: {
+    fontFamily: 'Rubik_700Bold',
       textAlign: 'center',
       marginTop: 20,
   },
   signInText: {
-      fontWeight: 'bold',
+    fontFamily: 'Rubik_700Bold',
       color: '#007BFF',
   },
   

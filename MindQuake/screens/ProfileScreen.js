@@ -6,6 +6,8 @@ import { supabase } from '../db/supabase'
 import User from '../model/User';
 import * as Progress from 'react-native-progress';
 import Achievement from '../model/Achievement';
+import { ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 const ProfileScreen = ({ navigation }) => {
@@ -94,6 +96,8 @@ const ProfileScreen = ({ navigation }) => {
   }
 
   return (
+    <SafeAreaView style={styles.safeArea}>
+    <ScrollView contentContainerStyle={styles.scrollContent}>
     <View style={styles.container}>
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Main')}>
         <AntDesign name="arrowleft" size={35} color="black" />
@@ -113,6 +117,7 @@ const ProfileScreen = ({ navigation }) => {
           <View style={styles.editBadge}>
             <AntDesign name="edit" size={20} color="white" />
           </View>
+          <Text style={styles.nameText}>{user.full_name}</Text>
         </View>
 
       )}
@@ -135,12 +140,12 @@ const ProfileScreen = ({ navigation }) => {
           </View>
         </View>
       )}
-      {/* Nombre usuario */}
+      {/* Usuario */}
       {user && (
         <View style={styles.textContainer}>
-          <Text style={styles.nameText}>{user.full_name}</Text>
+          
           <TouchableOpacity
-            style={styles.button}
+            style={[styles.button, styles.buttonBlue]}
             onPress={() => navigation.navigate('AchievementsOverview', { achievements })}
           >
             <Text style={styles.buttonText}>Achievements</Text>
@@ -162,20 +167,28 @@ const ProfileScreen = ({ navigation }) => {
           </TouchableOpacity>
 
         </View>
+        
 
       )}
     </View>
+    </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+  },
+  scrollContent: {
+    paddingBottom: 20,
+  },
   // ====================
   // Main Container
   // ====================
   container: {
     flex: 1,
     backgroundColor: '#F2F1EB',
-    paddingHorizontal: 20,
     fontWeight: 'bold',
   },
 
@@ -211,10 +224,12 @@ const styles = StyleSheet.create({
   // ====================
   imageContainer: {
     alignItems: 'center',
-    marginTop: 80,
+    marginTop: 120,
     //marginBottom: 10,
   },
   image: {
+    marginTop: 30,
+    marginBottom: -50,
     width: 120,
     height: 120,
     borderRadius: 60,
@@ -223,8 +238,8 @@ const styles = StyleSheet.create({
   },
   levelBadge: {
     //position: 'absolute',
-    bottom: 30,
-    left: 30,
+    bottom: -20,
+    left: 40,
     backgroundColor: '#E76E63',
     width: 30,
     height: 30,
@@ -235,13 +250,13 @@ const styles = StyleSheet.create({
     borderColor: '#fff',
   },
   levelText: {
+    fontFamily: 'Rubik_700Bold',
     fontSize: 14,
-    fontWeight: 'bold',
     color: '#fff',
   },
   editBadge: {
     //position: 'absolute',
-    bottom: 145,
+    bottom: 100,
     left: 45,
     backgroundColor: '#E76E63',
     width: 35,
@@ -259,8 +274,8 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   progressText: {
+    fontFamily: 'Rubik_700Bold',
     fontSize: 16,
-    fontWeight: '600',
     color: '#FF7C7C',
     marginBottom: 8,
 
@@ -272,14 +287,11 @@ const styles = StyleSheet.create({
     width: '80%',
   },
   progressLevelText: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#FF7C7C',
     minWidth: 30,
     textAlign: 'center',
   },
   text: {
-    fontWeight: 'bold',
+    fontFamily: 'Rubik_700Bold',
   },
 
   // ====================
@@ -290,13 +302,13 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   nameText: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontFamily: 'Rubik_700Bold',
+    fontSize: 34,
     color: '#2d3748',
     marginBottom: 5,
+    
   },
   usernameText: {
-    fontSize: 16,
     color: '#718096',
     marginBottom: 30,
   },
@@ -305,8 +317,8 @@ const styles = StyleSheet.create({
   // Achievements Section
   // ====================
   achievementsText: {
+    fontFamily: 'Rubik_700Bold',
     fontSize: 20,
-    fontWeight: 'bold',
     color: '#2d3748',
     marginTop: 30,
     marginBottom: 15,
@@ -338,6 +350,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   noAchievementsText: {
+    fontFamily: 'Rubik_700Bold',
     fontSize: 16,
     color: '#718096',
   },
@@ -350,20 +363,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   button: {
-    minWidth: '50px',
-    width: '35%',
+    width: '50%',
     paddingVertical: 15,
     borderRadius: 60,
     marginBottom: 15,
     alignItems: 'center',
     justifyContent: 'center',
-    //backgroundColor: '#fff',
+    backgroundColor: '#F2F1EB',
     borderWidth: 5,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: -2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
+  },
+  buttonBlue: {
+    borderColor: '#63B9E7',
   },
   buttonYellow: {
     borderColor: '#95E752',
@@ -372,8 +387,8 @@ const styles = StyleSheet.create({
     borderColor: '#fc8181',
   },
   buttonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'Rubik_700Bold',
+    fontSize: 20,
     color: '#2d3748',
   },
 });

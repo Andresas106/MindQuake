@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { View, Text, ActivityIndicator, StyleSheet, Button, Alert } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import { shuffleArray } from '../hooks/shuffleArray';
 import { supabase } from '../db/supabase';
 import User from '../model/User';
-import checkAndUnlockAchievements from '../utils/checkAndUnlockAchievements'; // 👈 Import añadido
+import checkAndUnlockAchievements from '../utils/checkAndUnlockAchievements';
+
 
 const QuizScreen = ({ route, navigation }) => {
   const { categories, questionCount, difficulty, user } = route.params;
@@ -53,8 +54,8 @@ const QuizScreen = ({ route, navigation }) => {
     const updatedCorrectByCategory = { ...correctByCategory };
 
     if (isCorrect) {
-      newCorrectAnswers = newCorrectAnswers + 1;
-      const category = questions[currentQuestionIndex].category;
+      newCorrectAnswers++;
+      const category = questions[currentQuestionIndex].category.toLowerCase();
       updatedCorrectByCategory[category] = (updatedCorrectByCategory[category] || 0) + 1;
     }
 
@@ -63,10 +64,9 @@ const QuizScreen = ({ route, navigation }) => {
       setCorrectByCategory(updatedCorrectByCategory);
       setCurrentQuestionIndex(prev => prev + 1);
     } else {
-      // Fin del quiz → otorgar XP y redirigir
       const xpEarned = newCorrectAnswers * xpPerCorrect[difficulty];
       const updatedUser = new User({ ...user, xp: user.xp + xpEarned });
-      updatedUser.updateXp(updatedUser.xp); // Recalcula el nivel
+      updatedUser.updateXp(updatedUser.xp);
 
       let newlyUnlocked = [];
       try {
@@ -78,8 +78,6 @@ const QuizScreen = ({ route, navigation }) => {
           })
           .eq('id', user.id);
 
-
-        // Actualizar estadísticas por categoría
         for (const [category, count] of Object.entries(updatedCorrectByCategory)) {
           const { data: existingStat, error: fetchError } = await supabase
             .from('user_category_stats')
@@ -94,7 +92,6 @@ const QuizScreen = ({ route, navigation }) => {
           }
 
           if (existingStat) {
-            // Si ya existe, sumamos
             const { error: updateError } = await supabase
               .from('user_category_stats')
               .update({
@@ -103,10 +100,8 @@ const QuizScreen = ({ route, navigation }) => {
               })
               .eq('id', existingStat.id);
 
-
             if (updateError) console.error(`Error updating ${category}:`, updateError);
           } else {
-            // Si no existe, creamos
             const { error: insertError } = await supabase
               .from('user_category_stats')
               .insert({
@@ -115,12 +110,10 @@ const QuizScreen = ({ route, navigation }) => {
                 correct_answers: count,
               });
 
-
             if (insertError) console.error(`Error inserting ${category}:`, insertError);
           }
         }
 
-        // Obtener estadísticas
         const { data: existingStats, error: statsError } = await supabase
           .from('user_category_stats')
           .select('category, correct_answers')
@@ -131,15 +124,12 @@ const QuizScreen = ({ route, navigation }) => {
         } else {
           const totalCorrectByCategory = { ...updatedCorrectByCategory };
 
-          // Sumar cada estadística anterior
           for (const stat of existingStats) {
             totalCorrectByCategory[stat.category] = stat.correct_answers;
           }
-          
 
           newlyUnlocked = await checkAndUnlockAchievements(user.id, totalCorrectByCategory) || [];
         }
-
 
         if (error) {
           console.error('Error updating XP:', error);
@@ -149,7 +139,6 @@ const QuizScreen = ({ route, navigation }) => {
       } catch (err) {
         console.error('Error giving xp:', err);
       }
-
 
       navigation.navigate('Results', {
         user: { ...user, xp: updatedUser.xp, level: updatedUser.level },
@@ -175,43 +164,76 @@ const QuizScreen = ({ route, navigation }) => {
     return (
       <View style={styles.centered}>
         <Text>Couldn't load trivia questions</Text>
-        <Button title="Go Back" onPress={() => navigation.goBack()} />
+        <TouchableOpacity style={[styles.button, styles.buttonPurple]} onPress={() => navigation.goBack()}>
+          <Text style={styles.buttonText}>Go Back</Text>
+        </TouchableOpacity>
       </View>
     );
   }
 
+  const encodedCategories = categories.map(cat => encodeURIComponent(cat)).join(',');
+
+
+  const categoryColors = {
+    'Science': '#95E752',           // Ciencia
+    'Film & TV': '#63B9E7',    // Entretenimiento
+    'Geography': '#7A5FEF',        // Geografía
+    'Arts & Literature': '#F365D5', // Arte
+    'Sport & Leisure': '#E76E63',    // Deporte
+    'History': '#EFBC5E',          // Historia
+  };
+
   const currentQuestion = questions[currentQuestionIndex];
 
+  const backgroundColor = categoryColors[currentQuestion.category] || '#F2F1EB';
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.questionCounter}>
-        Question {currentQuestionIndex + 1} of {questions.length}
+    <View style={[styles.container, { backgroundColor }]}>
+
+      {/* Título de la categoría actual */}
+      <Text style={styles.categoryTitle}>
+        {currentQuestion.category}
       </Text>
+
+  
       <Text style={styles.questionText}>
         {decodeURIComponent(currentQuestion.question)}
       </Text>
-
+  
       <View style={styles.answersContainer}>
         {currentQuestion.answers.map((answer, index) => (
-          <Button
+          <TouchableOpacity
             key={index}
-            title={decodeURIComponent(answer)}
+            style={[styles.button, styles.buttonPurple, { marginBottom: 10 }]}
             onPress={() => handleAnswer(answer)}
-            color="#6200ee"
-          />
+            activeOpacity={0.7}
+          >
+            <Text style={styles.buttonText}>{decodeURIComponent(answer)}</Text>
+          </TouchableOpacity>
         ))}
       </View>
+
+      <Text style={styles.questionCounter}>
+        Question {currentQuestionIndex + 1} of {questions.length}
+      </Text>
     </View>
   );
+  
 };
 
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    backgroundColor: '#fff',
     flex: 1,
     justifyContent: 'center',
   },
+  categoryTitle: {
+    fontFamily: 'Rubik_700Bold',
+    fontSize: 32,
+    marginBottom: 10,
+    textAlign: 'center',
+    color: '#fff',
+  },  
   centered: {
     flex: 1,
     justifyContent: 'center',
@@ -219,19 +241,42 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   questionCounter: {
+    fontFamily: 'Rubik_700Bold',
     fontSize: 18,
-    fontWeight: 'bold',
+    marginTop: 35,
     marginBottom: 10,
     textAlign: 'center',
+    color: '#fff',
   },
   questionText: {
+    fontFamily: 'Rubik_700Bold',
     fontSize: 20,
     marginBottom: 20,
     textAlign: 'center',
+    color: '#fff',
   },
   answersContainer: {
     marginTop: 10,
-    gap: 10,
+  },
+  button: {
+    borderRadius: 25,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.15,
+    shadowOffset: { width: 0, height: 3 },
+    shadowRadius: 5,
+    elevation: 4,
+  },
+  buttonPurple: {
+    backgroundColor: '#F2F1EB',
+  },
+  buttonText: {
+    fontFamily: 'Rubik_700Bold',
+    color: '#2d3748 ',
+    fontSize: 16,
   },
 });
 

@@ -1,20 +1,23 @@
 import { useState, useEffect } from 'react';
-import {View, StyleSheet, Text, Button, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
 import Slider from '@react-native-community/slider';
 import useUserId from '../hooks/useUserId';
 import User from '../model/User';
 import { supabase } from '../db/supabase';
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
-import {MaterialIcons} from '@expo/vector-icons'
+import { MaterialIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
+import { ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 
 const categoriesList = [
-      { label: 'Arts & Literature', value: 'arts_and_literature' },
-      { label: 'Film & TV', value: 'film_and_tv' },
-      { label: 'History', value: 'history' },
-      { label: 'Science', value: 'science' },
-      { label: 'Geography', value: 'geography' },
-      { label: 'Sport & Leisure', value: 'sport_and_leisure' },
+  { label: 'Arts & Literature', value: 'arts_and_literature' },
+  { label: 'Film & TV', value: 'film_and_tv' },
+  { label: 'History', value: 'history' },
+  { label: 'Science', value: 'science' },
+  { label: 'Geography', value: 'geography' },
+  { label: 'Sport & Leisure', value: 'sport_and_leisure' },
 ];
 
 const GameSettingsScreen = ({ navigation }) => {
@@ -68,7 +71,7 @@ const GameSettingsScreen = ({ navigation }) => {
   };
 
   const selectAllCategories = () => {
-    const allCategoryValues = categoriesList.map(category => category.value);
+    const allCategoryValues = categoriesList.map((category) => category.value);
     setSelectedCategories(allCategoryValues);
   };
 
@@ -85,49 +88,128 @@ const GameSettingsScreen = ({ navigation }) => {
   }
 
   return (
+    <SafeAreaView style={styles.safeArea}>
+    <ScrollView contentContainerStyle={styles.scrollContent}>
     <View style={styles.container}>
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-          <AntDesign name="arrowleft" size={35} color="black" />
-        </TouchableOpacity>
+        <AntDesign name="arrowleft" size={35} color="black" />
+      </TouchableOpacity>
+
       <View style={styles.card}>
-        <Text style={styles.label}>Categories</Text>
-        <View style={styles.actionRow}>
-        <Button title="Select All" onPress={selectAllCategories} color="#03dac5" />
-        <Button title="Deselect All" onPress={deselectAllCategories} color="#cf6679" />
-      </View>
-        <SectionedMultiSelect
-          items={categoriesList}
-          uniqueKey='value'
-          displayKey='label'
-          selectedItems={selectedCategories}
-          onSelectedItemsChange={setSelectedCategories}
-          IconRenderer={MaterialIcons}
-          single={false}
-          showDropDowns={false}
-          styles={{
-            selectToggle: { padding: 10, borderRadius: 8, backgroundColor: '#f0f0f0' },
-            chipsWrapper: { marginTop: 10 },
-            itemText: { fontSize: 14 },
-          }}
-        />
-      </View>
-  
+  <Text style={styles.label}>Categories</Text>
+
+  <View style={styles.actionRow}>
+    <TouchableOpacity style={[styles.button, styles.buttonBlue]} onPress={selectAllCategories}>
+      <Text style={styles.buttonText}>Select All</Text>
+    </TouchableOpacity>
+    <TouchableOpacity style={[styles.button, styles.buttonRed]} onPress={deselectAllCategories}>
+      <Text style={styles.buttonText}>Deselect All</Text>
+    </TouchableOpacity>
+  </View>
+
+  <SectionedMultiSelect
+    items={categoriesList}
+    uniqueKey="value"
+    displayKey="label"
+    selectedItems={selectedCategories}
+    onSelectedItemsChange={setSelectedCategories}
+    IconRenderer={MaterialIcons}
+    single={false}
+    showDropDowns={false}
+    styles={{
+      selectToggle: {
+        padding: 14,
+        borderRadius: 12,
+        backgroundColor: '#e0f7fa',
+        borderColor: '#00bcd4',
+        borderWidth: 1,
+        marginTop: 10,
+      },
+      selectToggleText: {
+        fontFamily: 'Rubik_400Regular',
+        fontSize: 16,
+        color: '#00796b',
+      },
+      chipsWrapper: {
+        marginTop: 10,
+        flexWrap: 'wrap',
+      },
+      chipContainer: {
+        backgroundColor: '#ffecb3',
+        borderColor: '#ffa000',
+        borderWidth: 1,
+        borderRadius: 20,
+        paddingVertical: 6,
+        paddingHorizontal: 12,
+        margin: 4,
+      },
+      chipText: {
+        fontFamily: 'Rubik_400Regular',
+        color: '#e65100',
+        fontWeight: '600',
+      },
+      itemText: {
+        fontFamily: 'Rubik_400Regular',
+        fontSize: 15,
+        color: '#37474f',
+      },
+      subItemText: {
+        fontFamily: 'Rubik_400Regular',
+        fontSize: 14,
+        color: '#607d8b',
+      },
+      selectedItemText: {
+        fontFamily: 'Rubik_400Regular',
+        color: '#4caf50',
+      },
+      selectedSubItemText: {
+        fontFamily: 'Rubik_400Regular',
+        color: '#4caf50',
+      },
+    }}
+  />
+</View>
+
+
       <View style={styles.card}>
-        <Text style={styles.label}>Difficulty</Text>
-        <View style={styles.row}>
-          {['easy', 'medium', 'hard'].map((level) => (
-            <Button
-              key={level}
-              title={level.toUpperCase()}
-              color={difficulty === level ? '#6200ee' : '#bbb'}
-              onPress={() => setDifficulty(level)}
-            />
-          ))}
+      <Text style={styles.label}>Difficulty</Text>
+      <View style={styles.row}>
+          {['easy', 'medium', 'hard'].map((level) => {
+            const getSelectedStyle = () => {
+              switch (level) {
+                case 'easy':
+                  return { backgroundColor: '#4CAF50' }; // verde fuerte
+                case 'medium':
+                  return { backgroundColor: '#7E57C2' }; // morado intenso
+                case 'hard':
+                  return { backgroundColor: '#E53935' }; // rojo fuerte
+                default:
+                  return {};
+              }
+            };
+
+            const isSelected = difficulty === level;
+
+            return (
+              <TouchableOpacity
+                key={level}
+                style={[
+                  styles.button,
+                  isSelected ? getSelectedStyle() : styles.buttonGray,
+                  { marginHorizontal: 5, flex: 1 },
+                ]}
+                onPress={() => setDifficulty(level)}
+              >
+                <Text style={styles.buttonText}>{level.toUpperCase()}</Text>
+              </TouchableOpacity>
+            );
+          })}
         </View>
       </View>
-  
       <View style={styles.card}>
-        <Text style={styles.label}>Number of Questions: <Text style={styles.bold}>{questionCount}</Text></Text>
+        <Text style={styles.label}>
+          Number of Questions: <Text style={styles.highlight}>{questionCount}</Text>
+        </Text>
         <Slider
           style={{ width: '100%', height: 40 }}
           minimumValue={5}
@@ -135,122 +217,131 @@ const GameSettingsScreen = ({ navigation }) => {
           step={5}
           value={questionCount}
           onSlidingComplete={setQuestionCount}
-          minimumTrackTintColor="#6200ee"
-          maximumTrackTintColor="#ccc"
-          thumbTintColor="#6200ee"
+          minimumTrackTintColor="#03A9F4"  
+          maximumTrackTintColor="#03A9F4"  
+          thumbTintColor="#03A9F4"          
         />
       </View>
-  
+
+
       <View style={styles.startButtonWrapper}>
-        <Button title="Start Game" onPress={startGame} color="#6200ee" />
+        <TouchableOpacity style={[styles.button, styles.buttonPurple, { paddingVertical: 12 }]} onPress={startGame}>
+          <Text style={[styles.buttonText, { fontSize: 18 }]}>Start Game</Text>
+        </TouchableOpacity>
       </View>
     </View>
+    </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  // ====================
-  // Layout Styles
-  // ====================
+  safeArea: {
+    flex: 1,
+  },
+  scrollContent: {
+    paddingBottom: 30,
+  },
+  // Main container
   container: {
     flex: 1,
-    padding: 20,
     backgroundColor: '#F2F1EB',
+    paddingHorizontal: 20,
+    paddingTop: 100,
     alignItems: 'center',
-    justifyContent: 'center',
   },
+
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  
-    // ====================
-    // Navigation Elements
-    // ====================
-    backButton: {
-      position: 'absolute',
-      top: 40,
-      left: 20,
-      backgroundColor: '#e9ecef',
-      borderRadius: 20,
-      padding: 8,
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 4,
-      elevation: 3,
-    },
 
-  // ====================
-  // Card Components
-  // ====================
+  backButton: {
+    position: 'absolute',
+    top: 40,
+    left: 20,
+    backgroundColor: '#e9ecef',
+    borderRadius: 20,
+    padding: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+
   card: {
-    backgroundColor: '#fafafa',
-    borderRadius: 12,
-    borderWidth: 4,
-    borderColor: '#EFBC5E',
     padding: 15,
     marginBottom: 20,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 6,
-    elevation: 3,
-    marginTop: 25,
-    width: '80%',
+    width: '90%',
     alignItems: 'center',
   },
 
-  // ====================
-  // Text Styles
-  // ====================
   label: {
-    fontSize: 16,
-    fontWeight: '500',
+    fontFamily: 'Rubik_700Bold',
+    fontSize: 26,
     marginBottom: 10,
     color: '#444',
+    textAlign: 'center',
   },
+
   bold: {
     fontWeight: 'bold',
     color: '#6200ee',
   },
 
-  // ====================
-  // Button & Action Styles
-  // ====================
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-betwen',
-    marginTop: 10,
-  },
   actionRow: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginBottom: 10,
-  },
-  startButtonWrapper: {
-    marginTop: 30,
-    paddingHorizontal: 10,
+    width: '100%',
   },
 
-  // ====================
-  // Form Element Styles
-  // ====================
-  slider: {
-    width: '100%', 
-    height: 40
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '110%',
+    marginTop: 10,
   },
-  selectToggle: { 
-    padding: 10, 
-    borderRadius: 8, 
-    backgroundColor: '#f0f0f0' 
+
+  startButtonWrapper: {
+    marginTop: 30,
+    width: '70%',
   },
-  chipsWrapper: { 
-    marginTop: 10 
+
+  button: {
+    borderRadius: 25,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.15,
+    shadowOffset: { width: 0, height: 3 },
+    shadowRadius: 5,
+    elevation: 4,
   },
-  itemText: { 
-    fontSize: 14 
+
+  buttonBlue: {
+    backgroundColor: '#4D96FF',
+  },
+
+  buttonRed: {
+    backgroundColor: '#FF5C5C',
+  },
+
+  buttonPurple: {
+    backgroundColor: '#D81B60',
+  },
+
+  buttonGray: {
+    backgroundColor: '#bbb',
+  },
+
+  buttonText: {
+    fontFamily: 'Rubik_700Bold',
+    color: 'white',
   },
 });
 

@@ -79,21 +79,29 @@ const AchievementsOverviewScreen = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: 65,
+    paddingVertical: 90,
     paddingHorizontal: 20,
   },
   title: {
+    fontFamily: 'Rubik_700Bold',
     fontSize: 27,
-    fontWeight: 'bold',
+    color: '#2d3748',
     textAlign: 'center',
-    color: 'black',
-    marginBottom: 10
+    marginBottom: 10,
   },
   backButton: {
     position: 'absolute',
-    top: 60,
-    left: 10,
-    zIndex: 10,
+    zIndex: 100,
+    top: 80,
+    left: 20,
+    backgroundColor: '#e9ecef',
+    borderRadius: 20,
+    padding: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   grid: {
     justifyContent: 'center',
@@ -131,12 +139,13 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   modalTitle: {
+    fontFamily: 'Rubik_700Bold',
     fontSize: 20,
     color: 'white',
-    fontWeight: 'bold',
     marginBottom: 8,
   },
   modalDate: {
+    fontFamily: 'Rubik_700Bold',
     fontSize: 16,
     color: '#ccc',
   },

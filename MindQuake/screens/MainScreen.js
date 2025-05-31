@@ -2,7 +2,9 @@ import { useState, useEffect } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, Modal, Switch, Image } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import useUserId from '../hooks/useUserId';
-import { supabase } from '../db/supabase'
+import { supabase } from '../db/supabase';
+import { ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 const MainScreen = ({ navigation }) => {
@@ -117,6 +119,12 @@ const MainScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+  },
+  scrollContent: {
+    paddingBottom: 20,
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
@@ -148,24 +156,29 @@ const styles = StyleSheet.create({
 
   button: {
     width: '50%',
-    padding: 15,
-    borderRadius: 50,
-    marginBottom: 40,
+    paddingVertical: 15,
+    borderRadius: 60,
+    marginBottom: 45,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#F2F1EB',
+    borderWidth: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   buttonYellow: {
-    borderColor: '#EFBC5E',
-    borderWidth: 8,
+    borderColor: '#95E752',
   },
   buttonBlue: {
-    borderColor: '#E76E63',
-    borderWidth: 8,
+    borderColor: '#fc8181',
   },
   buttonText: {
+    fontFamily: 'Rubik_700Bold',
     color: 'black',
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 20,
   },
     backButton: {
       position: 'absolute',
@@ -195,8 +208,8 @@ const styles = StyleSheet.create({
     width: 326,
   },
   settingsTitle: {
+    fontFamily: 'Rubik_700Bold',
     fontSize: 22,
-    fontWeight: 'bold',
     marginBottom: 15,
   },
   sliderContainer: {
@@ -204,15 +217,15 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   switchRow: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
-    paddingVertical: 10,
+    marginBottom: 5,
   },
   sliderText: {
+    fontFamily: 'Rubik_400Regular',
     fontSize: 18,
-    fontWeight: 'normal',
     marginRight: 15,
   },
   levelBadge: {

@@ -4,6 +4,8 @@ import { AntDesign } from '@expo/vector-icons';
 import useUserId from '../hooks/useUserId';
 import User from '../model/User';
 import { supabase } from '../db/supabase';
+import { ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const EditProfileScreen = ({ navigation }) => {
     const [profilePicture, setProfilePicture] = useState(''); // Imagen actual del perfil
@@ -131,6 +133,8 @@ const EditProfileScreen = ({ navigation }) => {
           }
 
     return (
+        <SafeAreaView style={styles.safeArea}>
+        <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.container}>
             <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
                 <AntDesign name="arrowleft" size={30} color="black" />
@@ -151,7 +155,7 @@ const EditProfileScreen = ({ navigation }) => {
             >
                 <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center' }}>
                     <View style={{ backgroundColor: '#fff', margin: 20, borderRadius: 10, padding: 20 }}>
-                        <Text style={{ fontSize: 18, marginBottom: 10 }}>Choose an Avatar</Text>
+                        <Text style={styles.label }>Choose an Avatar</Text>
                         <FlatList
                             data={avatarList}
                             keyExtractor={(item, index) => index.toString()}
@@ -210,10 +214,18 @@ const EditProfileScreen = ({ navigation }) => {
                 <Text style={styles.saveButtonText}>Save Changes</Text>
             </TouchableOpacity>
         </View>
+        </ScrollView>
+    </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
+    safeArea: {
+        flex: 1,
+      },
+      scrollContent: {
+        paddingBottom: 20,
+      },
     // ====================
     // Main Container
     // ====================
@@ -261,7 +273,7 @@ const styles = StyleSheet.create({
       borderRadius: 75,
       marginBottom: 30,
       borderWidth: 3,
-      borderColor: '#76c7c0',
+      borderColor: '#95E752',
       shadowColor: '#000',
       shadowOffset: { width: 0, height: 4 },
       shadowOpacity: 0.2,
@@ -277,13 +289,14 @@ const styles = StyleSheet.create({
       marginBottom: 20,
     },
     label: {
+      fontFamily: 'Rubik_700Bold',
       fontSize: 16,
-      fontWeight: '600',
       marginBottom: 8,
       color: '#495057',
       marginLeft: 5,
     },
     input: {
+        fontFamily: 'Rubik_400Regular',
       backgroundColor: '#fff',
       padding: 15,
       borderRadius: 12,
@@ -315,9 +328,9 @@ const styles = StyleSheet.create({
       elevation: 4,
     },
     saveButtonText: {
+      fontFamily: 'Rubik_700Bold',  
       color: '#fff',
       fontSize: 18,
-      fontWeight: 'bold',
       letterSpacing: 0.5,
     },
   
@@ -337,8 +350,8 @@ const styles = StyleSheet.create({
       maxHeight: '80%',
     },
     modalTitle: {
+      fontFamily: 'Rubik_700Bold',  
       fontSize: 20,
-      fontWeight: 'bold',
       marginBottom: 15,
       color: '#212529',
       textAlign: 'center',

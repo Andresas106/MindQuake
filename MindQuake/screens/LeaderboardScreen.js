@@ -104,21 +104,29 @@ const LeaderboardScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    paddingVertical: 65,
+    paddingVertical: 90,
     paddingHorizontal: 20,
   },
   title: {
+    fontFamily: 'Rubik_700Bold',
     fontSize: 27,
-    fontWeight: 'bold',
     color: '#333',
     textAlign: 'center',
     marginBottom: 10
   },
   backButton: {
     position: 'absolute',
-    top: 60,
-    left: 10,
-    zIndex: 10,
+    zIndex: 100,
+    top: 80,
+    left: 20,
+    backgroundColor: '#e9ecef',
+    borderRadius: 20,
+    padding: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   userContainer: {
     flexDirection: 'row',
@@ -142,18 +150,19 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   username: {
+    fontFamily: 'Rubik_700Bold',
     fontSize: 16,
-    fontWeight: 'bold',
     color: '#333',
   },
   level: {
+    fontFamily: 'Rubik_400Regular',
     fontSize: 14,
     color: '#666',
   },
   rank: {
+    fontFamily: 'Rubik_700Bold',
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#e0a200', // dorado/naranja
+    color: '#e0a200',
   },
   currentUserCard: {
     backgroundColor: '#292929',
@@ -174,8 +183,8 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   podiumTitle: {
+  fontFamily: 'Rubik_700Bold',
   fontSize: 18,
-  fontWeight: '600',
   textAlign: 'center',
   marginVertical: 16,
   color: '#333',
