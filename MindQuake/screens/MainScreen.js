@@ -167,11 +167,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-  backButton: {
-    position: 'absolute',
-    top: 20,
-    left: 10,
-  },
+    backButton: {
+      position: 'absolute',
+      top: 10,
+      left: 10,
+      backgroundColor: '#e9ecef',
+      borderRadius: 20,
+      padding: 8,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 3,
+    },
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -204,7 +212,7 @@ const styles = StyleSheet.create({
   },
   sliderText: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: 'normal',
     marginRight: 15,
   },
   levelBadge: {

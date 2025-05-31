@@ -159,17 +159,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  backButton: {
-    position: 'absolute',
-    top: 60,
-    left: 10,
-    zIndex: 10,
-  },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
+  
+    // ====================
+    // Navigation Elements
+    // ====================
+    backButton: {
+      position: 'absolute',
+      top: 40,
+      left: 20,
+      backgroundColor: '#e9ecef',
+      borderRadius: 20,
+      padding: 8,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 3,
+    },
 
   // ====================
   // Card Components

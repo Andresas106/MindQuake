@@ -189,15 +189,22 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f7fa',
   },
 
-  // ====================
-  // Navigation Elements
-  // ====================
-  backButton: {
-    position: 'absolute',
-    top: 60,
-    //left: 20,
-    zIndex: 10,
-  },
+    // ====================
+    // Navigation Elements
+    // ====================
+    backButton: {
+      position: 'absolute',
+      top: 40,
+      left: 20,
+      backgroundColor: '#e9ecef',
+      borderRadius: 20,
+      padding: 8,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 3,
+    },
 
   // ====================
   // Profile Header
