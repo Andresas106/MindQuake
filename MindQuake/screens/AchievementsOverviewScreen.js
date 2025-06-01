@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { View, Text, FlatList, Modal, Image, Pressable, StyleSheet, Dimensions,} from 'react-native';
 import SoundButton from '../SoundButton';
-import Achievement from '../model/Achievement'; // ajusta la ruta si es necesario
+import Achievement from '../model/Achievement';
 import { AntDesign } from '@expo/vector-icons';
 
 const numColumns = 3;

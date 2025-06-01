@@ -3,7 +3,7 @@ class Achievement {
         this.id = id;
         this.name = name;
         this.icon = icon;
-        this.unlockedAt = unlockedAt || null; // Opcional, puede ser null si no está desbloqueado
+        this.unlockedAt = unlockedAt || null;
     }
 
     isUnlocked() {
