@@ -50,15 +50,19 @@ const checkAndUnlockAchievements = async (userId, categoryStats) => {
         if (!alreadyUnlocked) {
           const unlockedAt = new Date().toISOString();
 
-          const { error: insertError } = await supabase
-            .from('user_achievements')
-            .insert({
-              user_id: userId,
-              achievement_id: achievementData.id,
-              unlocked_at: unlockedAt,
-            });
+         const { error: insertError, data: insertData } = await supabase
+  .from('user_achievements')
+  .insert({
+    user_id: userId,
+    achievement_id: achievementData.id,
+    unlocked_at: unlockedAt,
+  })
+  .onConflict(['user_id', 'achievement_id']) // ⬅️ Añade esto
+  .ignore()
+  .select(); // ⬅️ Y esto
 
-          if (!insertError) {
+
+          if (!insertError && insertData && insertData.length > 0) {
             unlockedAchievements.push(
               new Achievement({
                 id: achievementData.id,
