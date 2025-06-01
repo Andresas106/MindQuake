@@ -1,19 +1,21 @@
-// SoundButton.js
 import React from 'react';
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity, Vibration } from 'react-native';
 import { Audio } from 'expo-av';
+import { useAudio } from './AudioProvider';
 
 const SoundButton = ({ onPress, children, style, ...props }) => {
+  const { isSoundEnabled, soundVolume, vibrationEnabled } = useAudio();
+
   const playSound = async () => {
+    if (!isSoundEnabled) return;
+
     try {
-      // Asegúrate que la ruta '../assets/audio/button_sound.wav' sea correcta
       const { sound } = await Audio.Sound.createAsync(
         require('./assets/audio/button_sound.wav')
       );
-      
+      await sound.setVolumeAsync(soundVolume);
       await sound.playAsync();
 
-      // Cuando el sonido termine, descargamos para liberar recursos
       sound.setOnPlaybackStatusUpdate((status) => {
         if (!status.isPlaying) {
           sound.unloadAsync();
@@ -25,10 +27,13 @@ const SoundButton = ({ onPress, children, style, ...props }) => {
   };
 
   const handlePress = () => {
-    // Reproducir sonido
     playSound();
 
-    // Ejecutar función pasada como onPress
+    if (vibrationEnabled) {
+      // Vibrar durante 50ms, puedes ajustar el tiempo
+      Vibration.vibrate(50);
+    }
+
     if (onPress) {
       onPress();
     }
@@ -39,7 +44,7 @@ const SoundButton = ({ onPress, children, style, ...props }) => {
       onPress={handlePress}
       style={style}
       {...props}
-      activeOpacity={0.7} // Opcional: para mejor feedback táctil
+      activeOpacity={0.7}
     >
       {children}
     </TouchableOpacity>

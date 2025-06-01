@@ -5,10 +5,12 @@ import { shuffleArray } from '../hooks/shuffleArray';
 import { supabase } from '../db/supabase';
 import User from '../model/User';
 import checkAndUnlockAchievements from '../utils/checkAndUnlockAchievements';
-import { Audio } from 'expo-av';
+
 
 const QuizScreen = ({ route, navigation }) => {
   const { categories, questionCount, difficulty, user } = route.params;
+
+
 
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -17,37 +19,6 @@ const QuizScreen = ({ route, navigation }) => {
   const [correctByCategory, setCorrectByCategory] = useState({});
 
   const quizSoundRef = useRef(null);
-
-  // Música de quiz: cargar y reproducir al montar, parar al desmontar
-  useEffect(() => {
-    let isMounted = true;
-
-    const loadQuizMusic = async () => {
-      try {
-        const { sound } = await Audio.Sound.createAsync(
-          require('../assets/audio/questions_music.mp3'),
-          { shouldPlay: true, isLooping: true }
-        );
-        if (isMounted) {
-          quizSoundRef.current = sound;
-          await sound.playAsync();
-        }
-      } catch (error) {
-        console.error('Error loading quiz music:', error);
-      }
-    };
-
-    loadQuizMusic();
-
-    return () => {
-      isMounted = false;
-      if (quizSoundRef.current) {
-        quizSoundRef.current.stopAsync();
-        quizSoundRef.current.unloadAsync();
-        quizSoundRef.current = null;
-      }
-    };
-  }, []);
 
   useEffect(() => {
     const fetchQuestions = async () => {

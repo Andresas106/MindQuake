@@ -1,31 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react';
+// App.js
+import React, { useEffect, useState, useRef } from 'react';
 import AppNavigator from './navigation/AppNavigation';
 import { useFonts } from 'expo-font';
 import { Rubik_400Regular, Rubik_700Bold } from '@expo-google-fonts/rubik';
 import { View, ActivityIndicator } from 'react-native';
 import { Audio } from 'expo-av';
 
-let sound = null;
-
-const playMusic = async () => {
-  if (sound) return; // ya está sonando
-  try {
-    sound = new Audio.Sound();
-    await sound.loadAsync(require('./assets/audio/menu_music.mp3'));
-    await sound.setIsLoopingAsync(true);
-    await sound.playAsync();
-  } catch (e) {
-    console.log('Error playMusic:', e);
-  }
-};
-
-const stopMusic = async () => {
-  if (sound) {
-    await sound.stopAsync();
-    await sound.unloadAsync();
-    sound = null;
-  }
-};
+// Refs para mantener la música cargada y evitar recargas innecesarias
+const menuMusicRef = { current: null };
+const quizMusicRef = { current: null };
 
 const App = () => {
   const [fontsLoaded] = useFonts({
@@ -36,14 +19,55 @@ const App = () => {
   const [currentRoute, setCurrentRoute] = useState(null);
 
   useEffect(() => {
-    if (!currentRoute) return;
+    const handleMusic = async () => {
+      if (!currentRoute) return;
 
-    if (currentRoute === 'Quiz') {
-      stopMusic();
-    } else {
-      playMusic();
-    }
+      // Si estamos en la pantalla Quiz, reproducir música de preguntas
+      if (currentRoute === 'Quiz') {
+        // Parar menú
+        if (menuMusicRef.current) {
+          await menuMusicRef.current.stopAsync();
+          await menuMusicRef.current.unloadAsync();
+          menuMusicRef.current = null;
+        }
+
+        // Iniciar quiz
+        if (!quizMusicRef.current) {
+          const { sound } = await Audio.Sound.createAsync(
+            require('./assets/audio/questions_music.mp3'),
+            { isLooping: true }
+          );
+          quizMusicRef.current = sound;
+          await sound.playAsync();
+        }
+      } else {
+        // Parar quiz
+        if (quizMusicRef.current) {
+          await quizMusicRef.current.stopAsync();
+          await quizMusicRef.current.unloadAsync();
+          quizMusicRef.current = null;
+        }
+
+        // Iniciar menú
+        if (!menuMusicRef.current) {
+          const { sound } = await Audio.Sound.createAsync(
+            require('./assets/audio/menu_music.mp3'),
+            { isLooping: true }
+          );
+          menuMusicRef.current = sound;
+          await sound.playAsync();
+        }
+      }
+    };
+
+    handleMusic();
   }, [currentRoute]);
+
+  const onNavigationStateChange = (state) => {
+    if (!state) return;
+    const route = state.routes[state.index].name;
+    setCurrentRoute(route);
+  };
 
   if (!fontsLoaded) {
     return (
@@ -52,12 +76,6 @@ const App = () => {
       </View>
     );
   }
-
-  const onNavigationStateChange = (state) => {
-    if (!state) return;
-    const route = state.routes[state.index].name;
-    setCurrentRoute(route);
-  };
 
   return <AppNavigator onStateChange={onNavigationStateChange} />;
 };

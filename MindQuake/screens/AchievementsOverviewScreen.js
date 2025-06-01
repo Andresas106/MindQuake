@@ -107,7 +107,8 @@ const styles = StyleSheet.create({
   grid: {
     justifyContent: 'center',
     gap: 10,
-    marginTop: 40,
+    marginTop: 10,
+    marginBottom: 40,
   },
   achievementContainer: {
     width: itemSize,

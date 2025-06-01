@@ -1,7 +1,10 @@
+// AppNavigator.js (final y correcto)
+import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
+import { AudioProvider } from '../AudioProvider';
 
-// Importa tus pantallas
+// Pantallas
 import HomeScreen from '../screens/HomeScreen';
 import MainScreen from '../screens/MainScreen';
 import ProfileScreen from '../screens/ProfileScreen';
@@ -17,17 +20,19 @@ const Stack = createStackNavigator();
 const AppNavigator = ({ onStateChange }) => {
   return (
     <NavigationContainer onStateChange={onStateChange}>
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
-        <Stack.Screen name="Main" component={MainScreen} options={{ headerShown: false }}/>
-        <Stack.Screen name='Profile' component={ProfileScreen} options={{headerShown: false}}/>
-        <Stack.Screen name='EditProfile' component={EditProfileScreen} options={{headerShown: false}}/>
-        <Stack.Screen name='GameSettings' component={GameSettingsScreen} options={{headerShown: false}}/>
-        <Stack.Screen name='Quiz' component={QuizScreen} options={{headerShown: false}}/>
-        <Stack.Screen name='Results' component={ResultsScreen} options={{headerShown: false}}/>
-        <Stack.Screen name='AchievementsOverview' component={AchievementsOverviewScreen} options={{headerShown: false}}/>
-        <Stack.Screen name='Leaderboard' component={LeaderboardScreen} options={{headerShown: false}}/>
-      </Stack.Navigator>
+      <AudioProvider>
+        <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="Main" component={MainScreen} />
+          <Stack.Screen name="Profile" component={ProfileScreen} />
+          <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+          <Stack.Screen name="GameSettings" component={GameSettingsScreen} />
+          <Stack.Screen name="Quiz" component={QuizScreen} />
+          <Stack.Screen name="Results" component={ResultsScreen} />
+          <Stack.Screen name="AchievementsOverview" component={AchievementsOverviewScreen} />
+          <Stack.Screen name="Leaderboard" component={LeaderboardScreen} />
+        </Stack.Navigator>
+      </AudioProvider>
     </NavigationContainer>
   );
 };

@@ -1,26 +1,38 @@
-// AppNavigation.js
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import HomeScreen from '../screens/HomeScreen';
-import QuizScreen from '../screens/QuizScreen';
-import ResultScreen from '../screens/ResultScreen';
-import { AudioProvider } from '../AudioProvider'; // importa tu provider
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { Audio } from 'expo-av';
 
-const Stack = createNativeStackNavigator();
+const AudioContext = createContext();
 
-const AppNavigator = () => {
+export const AudioProvider = ({ children }) => {
+  const [soundVolume, setSoundVolume] = useState(1);
+  const [vibrationEnabled, setVibrationEnabled] = useState(true);
+  const [isSoundEnabled, setIsSoundEnabled] = useState(true);
+
+  // Alternar sonido general
+  const toggleSoundEnabled = () => {
+    setIsSoundEnabled(prev => !prev);
+  };
+
+  // Alternar vibración
+  const toggleVibration = () => {
+    setVibrationEnabled(prev => !prev);
+  };
+
   return (
-    <NavigationContainer>
-      <AudioProvider> {/* <- Ahora sí tiene acceso a navegación */}
-        <Stack.Navigator>
-          <Stack.Screen name="HomeScreen" component={HomeScreen} />
-          <Stack.Screen name="QuizScreen" component={QuizScreen} />
-          <Stack.Screen name="ResultScreen" component={ResultScreen} />
-        </Stack.Navigator>
-      </AudioProvider>
-    </NavigationContainer>
+    <AudioContext.Provider
+  value={{
+    isSoundEnabled,
+    toggleSoundEnabled,    
+    vibrationEnabled,
+    toggleVibration,
+    soundVolume,
+    setSoundVolume,
+    
+  }}
+>
+      {children}
+    </AudioContext.Provider>
   );
 };
 
-export default AppNavigator;
+export const useAudio = () => useContext(AudioContext);
