@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
   userContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f9f9f4', // fondo crema claro
+    backgroundColor: '#f9f9f4',
     borderRadius: 20,
     paddingVertical: 12,
     paddingHorizontal: 16,
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 25,
     borderWidth: 2,
-    borderColor: '#00bcd4', // azul suave
+    borderColor: '#00bcd4', 
     marginRight: 12,
   },
   podiumTitle: {

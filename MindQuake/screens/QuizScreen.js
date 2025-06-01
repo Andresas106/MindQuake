@@ -69,7 +69,7 @@ const QuizScreen = ({ route, navigation }) => {
       setCorrectByCategory(updatedCorrectByCategory);
       setCurrentQuestionIndex(prev => prev + 1);
     } else {
-      // Parar la música al acabar el quiz
+      
       if (quizSoundRef.current) {
         await quizSoundRef.current.stopAsync();
         await quizSoundRef.current.unloadAsync();

@@ -4,7 +4,7 @@ import SoundButton from '../SoundButton';
 const ResultsScreen = ({ route, navigation }) => {
   const { user, totalQuestions, newCorrectAnswers, unlockedAchievements = [] } = route.params;
 
-  const xpGained = user.xp; // ya actualizado
+  const xpGained = user.xp;
   const level = user.level;
 
   return (

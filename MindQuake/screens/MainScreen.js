@@ -7,17 +7,13 @@ import { supabase } from '../db/supabase';
 import { useAudio } from '../AudioProvider';
 
 const MainScreen = ({ navigation }) => {
-  // Estado para mostrar/ocultar modal de configuración
   const [modalVisible, setModalVisible] = useState(false);
 
-  // Nivel del usuario y foto de perfil (traídos de la base de datos)
   const [level, setLevel] = useState(null);
   const [profilePic, setProfilePic] = useState(null);
 
-  // Obtener ID de usuario con hook personalizado
   const userID = useUserId();
 
-  // Obtener datos del usuario cuando se monte el componente o cambie el userID
   useEffect(() => {
     const fetchUserData = async () => {
       const { data, error } = await supabase
@@ -40,10 +36,6 @@ const MainScreen = ({ navigation }) => {
   }, [userID]);
 
   const {
-    musicVolume,
-    changeMusicVolume,
-    isMusicEnabled,
-    toggleMusicEnabled,
     vibrationEnabled,
     toggleVibration,
     isSoundEnabled,

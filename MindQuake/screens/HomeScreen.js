@@ -5,8 +5,6 @@ import { AntDesign } from '@expo/vector-icons';
 import { supabase } from '../db/supabase'
 import { useFocusEffect } from '@react-navigation/native';
 import User from '../model/User';
-import { Audio } from 'expo-av';
-import { useRef } from 'react';
 
 
 const HomeScreen = ({ navigation }) => {

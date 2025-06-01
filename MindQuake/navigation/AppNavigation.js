@@ -1,10 +1,8 @@
-// AppNavigator.js (final y correcto)
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { AudioProvider } from '../AudioProvider';
 
-// Pantallas
 import HomeScreen from '../screens/HomeScreen';
 import MainScreen from '../screens/MainScreen';
 import ProfileScreen from '../screens/ProfileScreen';

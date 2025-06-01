@@ -9,7 +9,7 @@ import { ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const EditProfileScreen = ({ navigation }) => {
-    const [profilePicture, setProfilePicture] = useState(''); // Imagen actual del perfil
+    const [profilePicture, setProfilePicture] = useState(''); 
     const [fullName, setFullName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -38,7 +38,7 @@ const EditProfileScreen = ({ navigation }) => {
         const updates = {
             full_name: fullName,
             profile_picture: profilePicture,
-            email: email // <- también actualizamos el email aquí
+            email: email 
         };
 
         const { error } = await supabase
@@ -96,10 +96,10 @@ const EditProfileScreen = ({ navigation }) => {
     useEffect(() => {
         const fetchUserDataBD = async () => {
             const { data, error } = await supabase
-                .from('user')  // Asegúrate de que el nombre de la tabla es correcto
+                .from('user') 
                 .select()
                 .eq('id', userID)
-                .single(); // Evita errores si no hay datos
+                .single(); 
 
             if (error) {
                 console.error("Error al obtener los datos del usuario:", error);

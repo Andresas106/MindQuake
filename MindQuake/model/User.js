@@ -47,7 +47,7 @@ class User {
         xpRequired += 250;
       }
   
-      return xp; // XP dentro del nivel actual
+      return xp; 
     }
   
     updateXp(newXp) {

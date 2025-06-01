@@ -30,7 +30,6 @@ const SoundButton = ({ onPress, children, style, ...props }) => {
     playSound();
 
     if (vibrationEnabled) {
-      // Vibrar durante 50ms, puedes ajustar el tiempo
       Vibration.vibrate(50);
     }
 

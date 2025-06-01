@@ -12,17 +12,17 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 const ProfileScreen = ({ navigation }) => {
-  const [user, setUser] = useState(null); // Usamos un solo estado para el objeto User
+  const [user, setUser] = useState(null); 
   const userID = useUserId();
   const [achievements, setAchievements] = useState([]);
 
   useEffect(() => {
     const fetchUserData = async () => {
       const { data, error } = await supabase
-        .from('user')  // Asegúrate de que el nombre de la tabla es correcto
+        .from('user')  
         .select()
         .eq('id', userID)
-        .single(); // Evita errores si no hay datos
+        .single(); 
 
       if (error) {
         console.error("Error al obtener los datos del usuario:", error);
@@ -62,7 +62,7 @@ const ProfileScreen = ({ navigation }) => {
           if (name.includes("Platinum")) return tierOrder.Platinum;
           if (name.includes("Silver")) return tierOrder.Silver;
           if (name.includes("Bronze")) return tierOrder.Bronze;
-          return 99; // Por si no coincide
+          return 99; 
       };
 
       const formattedAchievements = data
@@ -76,7 +76,7 @@ const ProfileScreen = ({ navigation }) => {
               tierOrder: getTierOrder(item.achievements.name),
           }))
           .sort((a, b) => a.tierOrder - b.tierOrder)
-          .map(entry => entry.achievement); // aquí eliminamos el tier, no se guarda
+          .map(entry => entry.achievement); 
 
       setAchievements(formattedAchievements);
       }
@@ -106,9 +106,8 @@ const ProfileScreen = ({ navigation }) => {
       {user && (
         <View style={styles.imageContainer}>
           <SoundButton onPress={() => navigation.navigate('EditProfile')}>
-            {/* Si profile_picture es null o undefined, usamos una imagen por defecto */}
             <Image
-              source={{ uri: user.profile_picture }} // URL de una imagen por defecto
+              source={{ uri: user.profile_picture }} 
               style={styles.image}
             />
           </SoundButton>

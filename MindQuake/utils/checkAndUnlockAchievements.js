@@ -75,7 +75,7 @@ const checkAndUnlockAchievements = async (userId, categoryStats) => {
     }
   }
 
-  return unlockedAchievements; // Lista de objetos Achievement
+  return unlockedAchievements;
 };
 
 export default checkAndUnlockAchievements;

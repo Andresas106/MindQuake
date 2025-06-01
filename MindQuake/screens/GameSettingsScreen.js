@@ -59,7 +59,7 @@ const GameSettingsScreen = ({ navigation }) => {
 
   const startGame = () => {
     if (selectedCategories.length === 0) {
-      alert('Por favor, selecciona al menos una categoría.');
+      alert('Please, select al least one category.');
       return;
     }
 
@@ -179,11 +179,11 @@ const GameSettingsScreen = ({ navigation }) => {
             const getSelectedStyle = () => {
               switch (level) {
                 case 'easy':
-                  return { backgroundColor: '#4CAF50' }; // verde fuerte
+                  return { backgroundColor: '#4CAF50' };
                 case 'medium':
-                  return { backgroundColor: '#7E57C2' }; // morado intenso
+                  return { backgroundColor: '#7E57C2' }; 
                 case 'hard':
-                  return { backgroundColor: '#E53935' }; // rojo fuerte
+                  return { backgroundColor: '#E53935' }; 
                 default:
                   return {};
               }
@@ -243,7 +243,6 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingBottom: 30,
   },
-  // Main container
   container: {
     flex: 1,
     backgroundColor: '#F2F1EB',
