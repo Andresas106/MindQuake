@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { View, Text, ActivityIndicator, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import { shuffleArray } from '../hooks/shuffleArray';
 import { supabase } from '../db/supabase';
 import User from '../model/User';
 import checkAndUnlockAchievements from '../utils/checkAndUnlockAchievements';
-
+import { Audio } from 'expo-av';
 
 const QuizScreen = ({ route, navigation }) => {
   const { categories, questionCount, difficulty, user } = route.params;
@@ -14,6 +14,39 @@ const QuizScreen = ({ route, navigation }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [correctByCategory, setCorrectByCategory] = useState({});
+
+  const quizSoundRef = useRef(null);
+
+  // Música de quiz: cargar y reproducir al montar, parar al desmontar
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadQuizMusic = async () => {
+      try {
+        const { sound } = await Audio.Sound.createAsync(
+          require('../assets/audio/questions_music.mp3'),
+          { shouldPlay: true, isLooping: true }
+        );
+        if (isMounted) {
+          quizSoundRef.current = sound;
+          await sound.playAsync();
+        }
+      } catch (error) {
+        console.error('Error loading quiz music:', error);
+      }
+    };
+
+    loadQuizMusic();
+
+    return () => {
+      isMounted = false;
+      if (quizSoundRef.current) {
+        quizSoundRef.current.stopAsync();
+        quizSoundRef.current.unloadAsync();
+        quizSoundRef.current = null;
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -64,6 +97,13 @@ const QuizScreen = ({ route, navigation }) => {
       setCorrectByCategory(updatedCorrectByCategory);
       setCurrentQuestionIndex(prev => prev + 1);
     } else {
+      // Parar la música al acabar el quiz
+      if (quizSoundRef.current) {
+        await quizSoundRef.current.stopAsync();
+        await quizSoundRef.current.unloadAsync();
+        quizSoundRef.current = null;
+      }
+
       const xpEarned = newCorrectAnswers * xpPerCorrect[difficulty];
       const updatedUser = new User({ ...user, xp: user.xp + xpEarned });
       updatedUser.updateXp(updatedUser.xp);
@@ -171,35 +211,23 @@ const QuizScreen = ({ route, navigation }) => {
     );
   }
 
-  const encodedCategories = categories.map(cat => encodeURIComponent(cat)).join(',');
-
-
   const categoryColors = {
-    'Science': '#95E752',           // Ciencia
-    'Film & TV': '#63B9E7',    // Entretenimiento
-    'Geography': '#7A5FEF',        // Geografía
-    'Arts & Literature': '#F365D5', // Arte
-    'Sport & Leisure': '#E76E63',    // Deporte
-    'History': '#EFBC5E',          // Historia
+    'Science': '#95E752',
+    'Film & TV': '#63B9E7',
+    'Geography': '#7A5FEF',
+    'Arts & Literature': '#F365D5',
+    'Sport & Leisure': '#E76E63',
+    'History': '#EFBC5E',
   };
 
   const currentQuestion = questions[currentQuestionIndex];
-
   const backgroundColor = categoryColors[currentQuestion.category] || '#F2F1EB';
 
   return (
     <View style={[styles.container, { backgroundColor }]}>
+      <Text style={styles.categoryTitle}>{currentQuestion.category}</Text>
+      <Text style={styles.questionText}>{decodeURIComponent(currentQuestion.question)}</Text>
 
-      {/* Título de la categoría actual */}
-      <Text style={styles.categoryTitle}>
-        {currentQuestion.category}
-      </Text>
-
-  
-      <Text style={styles.questionText}>
-        {decodeURIComponent(currentQuestion.question)}
-      </Text>
-  
       <View style={styles.answersContainer}>
         {currentQuestion.answers.map((answer, index) => (
           <TouchableOpacity
@@ -218,7 +246,6 @@ const QuizScreen = ({ route, navigation }) => {
       </Text>
     </View>
   );
-  
 };
 
 const styles = StyleSheet.create({
@@ -233,7 +260,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textAlign: 'center',
     color: '#fff',
-  },  
+  },
   centered: {
     flex: 1,
     justifyContent: 'center',

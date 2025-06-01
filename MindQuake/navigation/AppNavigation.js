@@ -14,19 +14,19 @@ import LeaderboardScreen from '../screens/LeaderboardScreen';
 
 const Stack = createStackNavigator();
 
-const AppNavigator = () => {
+const AppNavigator = ({ onStateChange }) => {
   return (
-    <NavigationContainer>
+    <NavigationContainer onStateChange={onStateChange}>
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Main" component={MainScreen} options={{ headerShown: false }}/>
         <Stack.Screen name='Profile' component={ProfileScreen} options={{headerShown: false}}/>
-        <Stack.Screen name='EditProfile' component={EditProfileScreen} options={{headerShown: false}}></Stack.Screen>
-        <Stack.Screen name='GameSettings' component={GameSettingsScreen} options={{headerShown: false}}></Stack.Screen>
-        <Stack.Screen name='Quiz' component={QuizScreen} options={{headerShown: false}}></Stack.Screen>
-        <Stack.Screen name='Results' component={ResultsScreen} options={{headerShown: false}}></Stack.Screen>
-        <Stack.Screen name='AchievementsOverview' component={AchievementsOverviewScreen} options={{headerShown: false}}></Stack.Screen>
-        <Stack.Screen name='Leaderboard' component={LeaderboardScreen} options={{headerShown: false}}></Stack.Screen>
+        <Stack.Screen name='EditProfile' component={EditProfileScreen} options={{headerShown: false}}/>
+        <Stack.Screen name='GameSettings' component={GameSettingsScreen} options={{headerShown: false}}/>
+        <Stack.Screen name='Quiz' component={QuizScreen} options={{headerShown: false}}/>
+        <Stack.Screen name='Results' component={ResultsScreen} options={{headerShown: false}}/>
+        <Stack.Screen name='AchievementsOverview' component={AchievementsOverviewScreen} options={{headerShown: false}}/>
+        <Stack.Screen name='Leaderboard' component={LeaderboardScreen} options={{headerShown: false}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

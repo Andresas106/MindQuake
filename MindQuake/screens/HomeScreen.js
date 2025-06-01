@@ -4,6 +4,9 @@ import { AntDesign } from '@expo/vector-icons';
 import { supabase } from '../db/supabase'
 import { useFocusEffect } from '@react-navigation/native';
 import User from '../model/User';
+import { Audio } from 'expo-av';
+import { useRef } from 'react';
+
 
 const HomeScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -11,6 +14,8 @@ const HomeScreen = ({ navigation }) => {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  
 
   const handleSignUp = async () => {
     if (!fullName || !email || !password) {
