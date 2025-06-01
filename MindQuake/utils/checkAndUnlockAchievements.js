@@ -58,7 +58,9 @@ const checkAndUnlockAchievements = async (userId, categoryStats) => {
               unlocked_at: unlockedAt,
             });
 
-          if (!insertError) {
+          if(insertError && insertError.code !== '23505')
+            console.error(`Error inserting unlocked achievement:`, insertError);
+          else if (!insertError) {
             unlockedAchievements.push(
               new Achievement({
                 id: achievementData.id,
@@ -67,8 +69,6 @@ const checkAndUnlockAchievements = async (userId, categoryStats) => {
                 unlockedAt,
               })
             );
-          } else {
-            console.error(`Error inserting unlocked achievement:`, insertError);
           }
         }
       }
