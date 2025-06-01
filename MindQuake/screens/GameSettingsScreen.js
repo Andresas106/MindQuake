@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { View, StyleSheet, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text, ActivityIndicator} from 'react-native';
+import SoundButton from '../SoundButton';
 import Slider from '@react-native-community/slider';
 import useUserId from '../hooks/useUserId';
 import User from '../model/User';
@@ -91,20 +92,20 @@ const GameSettingsScreen = ({ navigation }) => {
     <SafeAreaView style={styles.safeArea}>
     <ScrollView contentContainerStyle={styles.scrollContent}>
     <View style={styles.container}>
-      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+      <SoundButton style={styles.backButton} onPress={() => navigation.goBack()}>
         <AntDesign name="arrowleft" size={35} color="black" />
-      </TouchableOpacity>
+      </SoundButton>
 
       <View style={styles.card}>
   <Text style={styles.label}>Categories</Text>
 
   <View style={styles.actionRow}>
-    <TouchableOpacity style={[styles.button, styles.buttonBlue]} onPress={selectAllCategories}>
+    <SoundButton style={[styles.button, styles.buttonBlue]} onPress={selectAllCategories}>
       <Text style={styles.buttonText}>Select All</Text>
-    </TouchableOpacity>
-    <TouchableOpacity style={[styles.button, styles.buttonRed]} onPress={deselectAllCategories}>
+    </SoundButton>
+    <SoundButton style={[styles.button, styles.buttonRed]} onPress={deselectAllCategories}>
       <Text style={styles.buttonText}>Deselect All</Text>
-    </TouchableOpacity>
+    </SoundButton>
   </View>
 
   <SectionedMultiSelect
@@ -191,7 +192,7 @@ const GameSettingsScreen = ({ navigation }) => {
             const isSelected = difficulty === level;
 
             return (
-              <TouchableOpacity
+              <SoundButton
                 key={level}
                 style={[
                   styles.button,
@@ -201,7 +202,7 @@ const GameSettingsScreen = ({ navigation }) => {
                 onPress={() => setDifficulty(level)}
               >
                 <Text style={styles.buttonText}>{level.toUpperCase()}</Text>
-              </TouchableOpacity>
+              </SoundButton>
             );
           })}
         </View>
@@ -225,9 +226,9 @@ const GameSettingsScreen = ({ navigation }) => {
 
 
       <View style={styles.startButtonWrapper}>
-        <TouchableOpacity style={[styles.button, styles.buttonPurple, { paddingVertical: 12 }]} onPress={startGame}>
+        <SoundButton style={[styles.button, styles.buttonPurple, { paddingVertical: 12 }]} onPress={startGame}>
           <Text style={[styles.buttonText, { fontSize: 18 }]}>Start Game</Text>
-        </TouchableOpacity>
+        </SoundButton>
       </View>
     </View>
     </ScrollView>

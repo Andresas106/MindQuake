@@ -1,4 +1,5 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image} from 'react-native';
+import SoundButton from '../SoundButton';
 
 const ResultsScreen = ({ route, navigation }) => {
   const { user, totalQuestions, newCorrectAnswers, unlockedAchievements = [] } = route.params;
@@ -37,13 +38,13 @@ const ResultsScreen = ({ route, navigation }) => {
       )}
 
       <View style={styles.buttonContainer}>
-        <TouchableOpacity
+        <SoundButton
           style={[styles.button, styles.buttonPurple]}
           onPress={() => navigation.navigate('Main')}
           activeOpacity={0.8}
         >
           <Text style={styles.buttonText}>Home</Text>
-        </TouchableOpacity>
+        </SoundButton>
       </View>
     </View>
   );

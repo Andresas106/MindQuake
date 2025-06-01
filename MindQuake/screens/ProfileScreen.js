@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { View, StyleSheet, TouchableOpacity, Image, Text, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, Image, Text, ActivityIndicator } from 'react-native';
+import SoundButton from '../SoundButton';
 import useUserId from '../hooks/useUserId';
 import { AntDesign } from '@expo/vector-icons';
 import { supabase } from '../db/supabase'
@@ -99,18 +100,18 @@ const ProfileScreen = ({ navigation }) => {
     <SafeAreaView style={styles.safeArea}>
     <ScrollView contentContainerStyle={styles.scrollContent}>
     <View style={styles.container}>
-      <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Main')}>
+      <SoundButton style={styles.backButton} onPress={() => navigation.navigate('Main')}>
         <AntDesign name="arrowleft" size={35} color="black" />
-      </TouchableOpacity>
+      </SoundButton>
       {user && (
         <View style={styles.imageContainer}>
-          <TouchableOpacity onPress={() => navigation.navigate('EditProfile')}>
+          <SoundButton onPress={() => navigation.navigate('EditProfile')}>
             {/* Si profile_picture es null o undefined, usamos una imagen por defecto */}
             <Image
               source={{ uri: user.profile_picture }} // URL de una imagen por defecto
               style={styles.image}
             />
-          </TouchableOpacity>
+          </SoundButton>
           <View style={styles.levelBadge}>
             <Text style={styles.levelText}>{user.level}</Text>
           </View>
@@ -144,27 +145,27 @@ const ProfileScreen = ({ navigation }) => {
       {user && (
         <View style={styles.textContainer}>
           
-          <TouchableOpacity
+          <SoundButton
             style={[styles.button, styles.buttonBlue]}
             onPress={() => navigation.navigate('AchievementsOverview', { achievements })}
           >
             <Text style={styles.buttonText}>Achievements</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
+          </SoundButton>
+          <SoundButton
             style={[styles.button, styles.buttonYellow]}
             onPress={() => navigation.navigate('Leaderboard') 
             }>
             <Text style={styles.buttonText}>Leaderboard</Text>
-          </TouchableOpacity>
+          </SoundButton>
 
-          <TouchableOpacity
+          <SoundButton
             style={[styles.button, styles.buttonRed]}
             onPress={async () => {
               const { error } = await supabase.auth.signOut();
               if (!error) navigation.navigate('Home');
             }}>
             <Text style={styles.buttonText}>Sign Out</Text>
-          </TouchableOpacity>
+          </SoundButton>
 
         </View>
         

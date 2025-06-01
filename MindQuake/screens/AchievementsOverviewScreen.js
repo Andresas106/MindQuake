@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { View, Text, FlatList, Modal, Image, Pressable, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, Modal, Image, Pressable, StyleSheet, Dimensions,} from 'react-native';
+import SoundButton from '../SoundButton';
 import Achievement from '../model/Achievement'; // ajusta la ruta si es necesario
 import { AntDesign } from '@expo/vector-icons';
 
@@ -36,9 +37,9 @@ const AchievementsOverviewScreen = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+      <SoundButton style={styles.backButton} onPress={() => navigation.goBack()}>
           <AntDesign name="arrowleft" size={35} color="black" />
-        </TouchableOpacity>
+        </SoundButton>
         <Text style={styles.title}>Achievements</Text>
       <FlatList
         data={achievements}

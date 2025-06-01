@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, Modal, FlatList, Pressable, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Image, Modal, FlatList, Pressable, ActivityIndicator } from 'react-native';
+import SoundButton from '../SoundButton';
 import { AntDesign } from '@expo/vector-icons';
 import useUserId from '../hooks/useUserId';
 import User from '../model/User';
@@ -136,16 +137,16 @@ const EditProfileScreen = ({ navigation }) => {
         <SafeAreaView style={styles.safeArea}>
         <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.container}>
-            <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+            <SoundButton style={styles.backButton} onPress={() => navigation.goBack()}>
                 <AntDesign name="arrowleft" size={30} color="black" />
-            </TouchableOpacity>
+            </SoundButton>
 
-            <TouchableOpacity onPress={() => setModalVisible(true)}>
+            <SoundButton onPress={() => setModalVisible(true)}>
                 <Image
                     source={{ uri: profilePicture }}
                     style={styles.profilePicture}
                 />
-            </TouchableOpacity>
+            </SoundButton>
 
             {/*MODAL*/}
             <Modal
@@ -210,9 +211,9 @@ const EditProfileScreen = ({ navigation }) => {
             </View>
 
             {/* Botón para guardar los cambios */}
-            <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+            <SoundButton style={styles.saveButton} onPress={handleSave}>
                 <Text style={styles.saveButtonText}>Save Changes</Text>
-            </TouchableOpacity>
+            </SoundButton>
         </View>
         </ScrollView>
     </SafeAreaView>

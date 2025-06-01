@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
-import { View, Text, ActivityIndicator, StyleSheet, Alert, TouchableOpacity } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet, Alert} from 'react-native';
+import SoundButton from '../SoundButton';
 import { shuffleArray } from '../hooks/shuffleArray';
 import { supabase } from '../db/supabase';
 import User from '../model/User';
@@ -204,9 +205,9 @@ const QuizScreen = ({ route, navigation }) => {
     return (
       <View style={styles.centered}>
         <Text>Couldn't load trivia questions</Text>
-        <TouchableOpacity style={[styles.button, styles.buttonPurple]} onPress={() => navigation.goBack()}>
+        <SoundButton style={[styles.button, styles.buttonPurple]} onPress={() => navigation.goBack()}>
           <Text style={styles.buttonText}>Go Back</Text>
-        </TouchableOpacity>
+        </SoundButton>
       </View>
     );
   }
@@ -230,14 +231,14 @@ const QuizScreen = ({ route, navigation }) => {
 
       <View style={styles.answersContainer}>
         {currentQuestion.answers.map((answer, index) => (
-          <TouchableOpacity
+          <SoundButton
             key={index}
             style={[styles.button, styles.buttonPurple, { marginBottom: 10 }]}
             onPress={() => handleAnswer(answer)}
             activeOpacity={0.7}
           >
             <Text style={styles.buttonText}>{decodeURIComponent(answer)}</Text>
-          </TouchableOpacity>
+          </SoundButton>
         ))}
       </View>
 

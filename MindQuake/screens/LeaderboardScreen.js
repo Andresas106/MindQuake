@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Image} from 'react-native';
+import SoundButton from '../SoundButton';
 import useUserId from '../hooks/useUserId';
 import { supabase } from '../db/supabase';
 import User from '../model/User';
@@ -68,9 +69,9 @@ const LeaderboardScreen = ({ navigation }) => {
 
   return (
     <View style={styles.screen}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <SoundButton style={styles.backButton} onPress={() => navigation.goBack()}>
           <AntDesign name="arrowleft" size={35} color="black" />
-        </TouchableOpacity>
+        </SoundButton>
         <Text style={styles.title}>Leaderboard</Text>
       <FlatList
         ListHeaderComponent={

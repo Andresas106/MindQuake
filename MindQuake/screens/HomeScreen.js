@@ -1,5 +1,6 @@
 import {useState, useCallback } from 'react';
-import { View, TouchableOpacity, StyleSheet, Text, Modal, TextInput, Image } from 'react-native';
+import { View, StyleSheet, Text, Modal, TextInput, Image } from 'react-native';
+import SoundButton from '../SoundButton';
 import { AntDesign } from '@expo/vector-icons';
 import { supabase } from '../db/supabase'
 import { useFocusEffect } from '@react-navigation/native';
@@ -93,22 +94,22 @@ const HomeScreen = ({ navigation }) => {
         source={require('../assets/logo.png')}
         style={styles.image}
       />
-      <TouchableOpacity
+      <SoundButton
         style={[styles.button, styles.buttonYellow]}
         onPress={() => {
           setModalVisible(true);
           setIsSignUp(true);
         }}>
         <Text style={styles.buttonText}>Register</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
+      </SoundButton>
+      <SoundButton
         style={[styles.button, styles.buttonBlue]}
         onPress={() => {
           setModalVisible(true);
           setIsSignUp(false);
         }}>
         <Text style={styles.buttonText}>Sign in</Text>
-      </TouchableOpacity>
+      </SoundButton>
 
       <Modal
         animationType="fade"
@@ -125,9 +126,9 @@ const HomeScreen = ({ navigation }) => {
           <View style={styles.modalView}>
             <Text style={styles.modalText}>{isSignUp ? "Create Account" : "Sign In"}</Text>
             <Text style={styles.modalSubText}>{isSignUp ? 'Sign up to get started' : 'Welcome back'}</Text>
-            <TouchableOpacity style={styles.backButton} onPress={() => setModalVisible(false)}>
+            <SoundButton style={styles.backButton} onPress={() => setModalVisible(false)}>
             <AntDesign name="arrowleft" size={24} color="black" />
-          </TouchableOpacity>
+          </SoundButton>
 
 
           {isSignUp && <Text style={styles.label}>Full Name</Text>}
@@ -152,9 +153,9 @@ const HomeScreen = ({ navigation }) => {
               onChangeText={setPassword}
           />
       
-          <TouchableOpacity style={styles.submitButton} onPress={isSignUp ? handleSignUp : handleSignIn}>
+          <SoundButton style={styles.submitButton} onPress={isSignUp ? handleSignUp : handleSignIn}>
               <Text style={styles.submitButtonText}>{isSignUp ? 'Submit' : 'Log In'}</Text>
-          </TouchableOpacity>
+          </SoundButton>
 
           <Text style={styles.footerText}>
               {isSignUp ? 'Already have an account? ' : "Don't have an account? "}

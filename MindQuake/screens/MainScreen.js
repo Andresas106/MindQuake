@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, Modal, Switch, Image } from 'react-native';
+import { View, Text, StyleSheet, Modal, Switch, Image } from 'react-native';
+import SoundButton from '../SoundButton';
 import { AntDesign } from '@expo/vector-icons';
 import useUserId from '../hooks/useUserId';
 import { supabase } from '../db/supabase';
@@ -43,28 +44,28 @@ const MainScreen = ({ navigation }) => {
     <View style={styles.container}>
       <Image source={require('../assets/logo.png')} style={styles.logoimage} />
       <View style={styles.imageContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+        <SoundButton onPress={() => navigation.navigate('Profile')}>
           <Image source={{ uri: profilePic }} style={styles.image} />
-        </TouchableOpacity>
+        </SoundButton>
         <View style={styles.levelBadge}>
           <Text style={styles.levelText}>{level}</Text>
         </View>
       </View>
-      <TouchableOpacity
+      <SoundButton
         style={[styles.button, styles.buttonYellow]}
         onPress={() => {
           navigation.navigate('GameSettings');
         }}>
         <Text style={styles.buttonText}>Play</Text>
-      </TouchableOpacity>
+      </SoundButton>
 
-      <TouchableOpacity
+      <SoundButton
         style={[styles.button, styles.buttonBlue]}
         onPress={() => {
           setModalVisible(true);
         }}>
         <Text style={styles.buttonText}>Settings</Text>
-      </TouchableOpacity>
+      </SoundButton>
 
       <Modal
         animationType="fade"
@@ -77,9 +78,9 @@ const MainScreen = ({ navigation }) => {
         <View style={styles.modalContainer}>
           <View style={styles.modalView}>
             <Text style={styles.settingsTitle}>Settings</Text>
-            <TouchableOpacity style={styles.backButton} onPress={() => setModalVisible(false)}>
+            <SoundButton style={styles.backButton} onPress={() => setModalVisible(false)}>
               <AntDesign name="arrowleft" size={24} color="black" />
-            </TouchableOpacity>
+            </SoundButton>
             <View style={styles.sliderContainer}>
               <View style={styles.switchRow}>
                 <Text style={styles.sliderText}>General Volume</Text>
