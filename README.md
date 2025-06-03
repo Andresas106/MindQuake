@@ -1,4 +1,4 @@
-# 📱 TriviaApp
+# 📱 MindQuake
 
 **TriviaApp** is a mobile quiz game built with **React Native**. Challenge yourself with trivia questions across various categories, earn experience points (XP), unlock achievements, and climb the global leaderboard!
 
