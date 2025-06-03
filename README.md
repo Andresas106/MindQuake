@@ -23,5 +23,4 @@
 - **Supabase** (auth + database)
 - **The Trivia API**
 - **React Navigation**
-- **Context API + Provider**
 - **SectionedMultiSelect**
